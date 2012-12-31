@@ -4,25 +4,7 @@
 #include <mutex>              // std::mutex, std::unique_lock
 #include <condition_variable> // std::condition_variable
 
-////////////////////////////////////////////////////
-#include <sstream>
-
-class logInfo : public std::ostringstream
-{
-public:
-   logInfo() = default;
-
-   ~logInfo()
-   {
-      std::lock_guard<std::mutex> guard(_mutexPrint);
-      std::cout << this->str() << std::endl;
-   }
-
-private:
-   static std::mutex _mutexPrint;
-};
-std::mutex logInfo::_mutexPrint{};
-/////////////////////////////////////////////////////
+#include "LogInfo.hpp"
 
 std::mutex mtx;
 std::condition_variable cv;
@@ -31,38 +13,47 @@ int cargo = 0;
 
 bool shipment_available()
 {
-    return cargo != 0;
+   return cargo != 0;
 }
 
 void consume (int n)
 {
-  for (int i = 0; i < n; ++i)
-  {
-    std::unique_lock<std::mutex> lck(mtx);
+   for (int i = 0; i < n; ++i)
+   {
+      logInfo() << "consume cargo>>" << cargo;
+
+      std::unique_lock<std::mutex> lck(mtx);
     
-    cv.wait(lck, shipment_available);
-    // consume:
-    logInfo() << cargo;
-    cargo = 0;
-  }
+      cv.wait(lck, shipment_available);
+      // consume:
+      logInfo() << "consume cargo<<" << cargo;
+      cargo = 0;
+   }
 }
 
 int main ()
 {
-  std::thread consumer_thread(consume, 10);
+   std::thread consumer_thread(consume, 10);
 
-  // produce 10 items when needed:
-  for (int i = 0; i < 10; ++i)
-  {
-    while (shipment_available())
-      std::this_thread::yield();
+   std::thread::id main_thread_id = std::this_thread::get_id();
+   logInfo() << "main_thread_id:" << main_thread_id;
 
-    std::unique_lock<std::mutex> lck(mtx);
-    cargo = i + 1;
-    cv.notify_one();
-  }
+   // produce 10 items when needed:
+   for (int i = 0; i < 10; ++i)
+   {
+      while (shipment_available())
+      {
+         logInfo() << "yield>>";
+         std::this_thread::yield();
+         logInfo() << "yield<<";
+      }
 
-  consumer_thread.join();
+      std::unique_lock<std::mutex> lck(mtx);
+      cargo = i + 1;
+      cv.notify_one();
+   }
 
-  return 0;
+   consumer_thread.join();
+
+   return 0;
 }

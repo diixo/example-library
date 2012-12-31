@@ -5,8 +5,6 @@
 #include <sstream>
 #include <iostream>
 
-namespace itc
-{
    class logInfo : public std::ostringstream
    {
    public:
@@ -21,4 +19,4 @@ namespace itc
    private:
       static std::mutex _mutexPrint;
    };
-}
+

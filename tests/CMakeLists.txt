@@ -8,7 +8,7 @@ set(TARGET test_thread)
 file(GLOB TEST_SOURCE_FILES
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_SOURCE_DIR}/src/*.hpp"
-    tst_library.cpp
+    test_library.cpp
 )
 
 include_directories(
@@ -16,8 +16,8 @@ include_directories(
     "../src"
 )
 
-add_executable (${TARGET} "test_thread.cpp")
-add_executable (test_cv_wait "test_cv_wait.cpp")
+add_executable (${TARGET} "test_thread.cpp" "LogInfo.cpp")
+add_executable (test_cv_wait "test_cv_wait.cpp" "LogInfo.cpp")
 
 #enable_testing()
 #add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")
