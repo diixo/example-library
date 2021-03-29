@@ -14,7 +14,7 @@ Installation command:
 ```
 sudo make install
 ```
-Success results:
+Success output of installation:
 ```
 [100%] Built target example-library
 Install the project...
