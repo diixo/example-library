@@ -5,8 +5,6 @@ An example C/C++ library. Uses CMake as build system and
 
 ## Build:
 ```
-cd example-library
-rm -r build
 mkdir build && cd build
 cmake ..
 make
