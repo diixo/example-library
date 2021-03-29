@@ -7,10 +7,10 @@ An example C/C++ library. Uses CMake as build system and
 ```
 mkdir build && cd build
 cmake ..
-make -j4
+make
 ```
 
-Installation:
+Installation command:
 ```
 sudo make install
 ```
