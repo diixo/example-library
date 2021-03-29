@@ -17,6 +17,6 @@
 TEST(Library, class_instantiation)
 {
     ExamplePublicClass obj;
-    std::string expectedType("19ExamplePublicClass");
-    EXPECT_TRUE((std::is_same<decltype(obj),ExamplePublicClass>::value));
+    std::string expectedType("23ExamplePublicClass");
+    EXPECT_TRUE((std::is_same<decltype(obj), ExamplePublicClass>::value));
 }
