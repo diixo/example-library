@@ -6,3 +6,4 @@ CMakeCache.txt
 
 # Ignore shadow build directory
 build/
+.vscode
