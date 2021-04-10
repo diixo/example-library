@@ -11,14 +11,14 @@
 
 namespace queue {
 
-class MBJobQueue {
+class JobQueue {
 public:
-    MBJobQueue() = default;
-    ~MBJobQueue();
-    MBJobQueue(MBJobQueue&&) = delete;
-    MBJobQueue(const MBJobQueue&) = delete;
-    MBJobQueue& operator=(MBJobQueue&&) = delete;
-    MBJobQueue& operator=(const MBJobQueue&) = delete;
+    JobQueue() = default;
+    ~JobQueue();
+    JobQueue(JobQueue&&) = delete;
+    JobQueue(const JobQueue&) = delete;
+    JobQueue& operator=(JobQueue&&) = delete;
+    JobQueue& operator=(const JobQueue&) = delete;
     void startExecution();
     void stopExecution();
     void addJob(std::function<void()> job);

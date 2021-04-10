@@ -4,46 +4,46 @@
 
 namespace timer {
 
-::queue::MBJobQueue MBTimerJobQueue::mTimerJobQueue;
-std::recursive_mutex MBTimerEvent::mObserverLock;
-std::map<MBTimer*, IMBTimerEventConsumer*> MBTimerEvent::mObservers;
+::queue::JobQueue TimerJobQueue::mTimerJobQueue;
+std::recursive_mutex TimerEvent::mObserverLock;
+std::map<Timer*, ITimerEventConsumer*> TimerEvent::mObservers;
 
-MBTimerEventData::MBTimerEventData(MBTimer& timer)
+TimerEventData::TimerEventData(Timer& timer)
     : mTimer(timer)
 {
 }
 
-MBTimer& MBTimerEventData::getTimer() const
+Timer& TimerEventData::getTimer() const
 {
     return mTimer;
 }
 
-void MBTimerJobQueue::startExecution()
+void TimerJobQueue::startExecution()
 {
     mTimerJobQueue.startExecution();
 }
 
-void MBTimerJobQueue::stopExecution()
+void TimerJobQueue::stopExecution()
 {
     mTimerJobQueue.stopExecution();
 }
 
-void MBTimerJobQueue::addJob(std::function<void()> job)
+void TimerJobQueue::addJob(std::function<void()> job)
 {
     mTimerJobQueue.addJob(std::move(job));
 }
 
-MBTimerEvent::MBTimerEvent(const MBTimerEventData& data)
+TimerEvent::TimerEvent(const TimerEventData& data)
     : mData(data)
 {
 }
 
-MBTimerEvent* MBTimerEvent::createEvent(const MBTimerEventData& data)
+TimerEvent* TimerEvent::createEvent(const TimerEventData& data)
 {
-    return new MBTimerEvent(data);
+    return new TimerEvent(data);
 }
 
-void MBTimerEvent::addListener(MBTimer* timer, IMBTimerEventConsumer* observer)
+void TimerEvent::addListener(Timer* timer, ITimerEventConsumer* observer)
 {
     std::lock_guard<std::recursive_mutex> lock(mObserverLock);
     if (mObservers.find(timer) == mObservers.end()) {
@@ -51,15 +51,15 @@ void MBTimerEvent::addListener(MBTimer* timer, IMBTimerEventConsumer* observer)
     }
 }
 
-void MBTimerEvent::removeListener(MBTimer* timer)
+void TimerEvent::removeListener(Timer* timer)
 {
     std::lock_guard<std::recursive_mutex> lock(mObserverLock);
     mObservers.erase(timer);
 }
 
-void MBTimerEvent::send(MBTimer* timer)
+void TimerEvent::send(Timer* timer)
 {
-    MBTimerJobQueue::addJob([timer, this] {
+    TimerJobQueue::addJob([timer, this] {
         std::lock_guard<std::recursive_mutex> lock(mObserverLock);
         auto it = mObservers.find(timer);
         if (it != mObservers.end()) {
@@ -69,7 +69,7 @@ void MBTimerEvent::send(MBTimer* timer)
     });
 }
 
-const MBTimerEventData& MBTimerEvent::data() const
+const TimerEventData& TimerEvent::data() const
 {
     return mData;
 }

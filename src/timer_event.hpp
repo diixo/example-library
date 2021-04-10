@@ -10,91 +10,91 @@
 
 namespace timer {
 
-class MBTimer;
-class MBTimerEvent;
+class Timer;
+class TimerEvent;
 
-class IMBTimerEventConsumer {
+class ITimerEventConsumer {
 public:
     /**
      * Process Event
-     * @param event MBTimerEvent object
+     * @param event TimerEvent object
      */
-    virtual void processEvent(const MBTimerEvent& event) = 0;
+    virtual void processEvent(const TimerEvent& event) = 0;
 };
 
 /**
- * @class MBTimerEventData timer_event.hpp
- * @brief Implements data class to be sent in MBTimerEvent
+ * @class TimerEventData timer_event.hpp
+ * @brief Implements data class to be sent in TimerEvent
  */
-class MBTimerEventData {
+class TimerEventData {
 public:
     /**
      * Constructor
-     * @param timer MBTimer object
+     * @param timer Timer object
      */
-    explicit MBTimerEventData(MBTimer& timer);
+    explicit TimerEventData(Timer& timer);
     /**
      * Default Destructor
      */
-    ~MBTimerEventData() = default;
+    ~TimerEventData() = default;
     /**
-     * Get reference of MBTimer
-     * @result Reference of MBTimer
+     * Get reference of Timer
+     * @result Reference of Timer
      */
-    MBTimer& getTimer() const;
+    Timer& getTimer() const;
 
 private:
-    MBTimer& mTimer;
+    Timer& mTimer;
 };
 
-class MBTimerEvent {
+class TimerEvent {
 public:
     /**
      * Constructor
-     * @param data MBTimerEventData object
+     * @param data TimerEventData object
      */
-    explicit MBTimerEvent(const MBTimerEventData& data);
+    explicit TimerEvent(const TimerEventData& data);
     /**
      * Default Destructor
      */
-    ~MBTimerEvent() = default;
+    ~TimerEvent() = default;
     /**
      * createEvent
-     * @param data MBTimerEventData object
+     * @param data TimerEventData object
      */
-    const MBTimerEventData& data() const;
+    const TimerEventData& data() const;
 
 private:
-    static MBTimerEvent* createEvent(const MBTimerEventData& data);
+    static TimerEvent* createEvent(const TimerEventData& data);
     /**
      * Add Listener
-     * @param timer MBTimer pointer
-     * @param observer IMBTimerEventConsumer pointer
+     * @param timer Timer pointer
+     * @param observer ITimerEventConsumer pointer
      */
-    static void addListener(MBTimer* timer, IMBTimerEventConsumer* observer);
+    static void addListener(Timer* timer, ITimerEventConsumer* observer);
     /**
      * Remove Listener
-     * @param timer MBTimer pointer
+     * @param timer Timer pointer
      */
-    static void removeListener(MBTimer* timer);
+    static void removeListener(Timer* timer);
     /**
      * Send Event
-     * @param timer MBTimer pointer
+     * @param timer Timer pointer
      */
-    void send(MBTimer* timer);
+    void send(Timer* timer);
     /**
      * Get Timer Event Data
-     * @return MBTimerEventData
+     * @return TimerEventData
      */
 
-    const MBTimerEventData mData;
-    static std::map<MBTimer*, IMBTimerEventConsumer*> mObservers;
+    const TimerEventData mData;
+    static std::map<Timer*, ITimerEventConsumer*> mObservers;
     static std::recursive_mutex mObserverLock;
 
-    friend MBTimer;
+    friend Timer;
 };
 
-class MBTimerJobQueue {
+class TimerJobQueue {
 public:
     /**
      * Start Execution of Job Queue
@@ -112,9 +112,9 @@ private:
      */
     static void addJob(std::function<void()> job);
 
-    static ::queue::MBJobQueue mTimerJobQueue;
+    static ::queue::JobQueue mTimerJobQueue;
 
-    friend MBTimerEvent;
+    friend TimerEvent;
 };
 
 } // namespace timer

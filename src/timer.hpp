@@ -11,47 +11,47 @@ namespace timer {
  * @class Timer timer.hpp
  * @brief Implements Timer utility
  */
-class MBTimer {
+class Timer {
 public:
     /**
      * Constructor
      * @param consumer Consumer of MBTimerEvent
      */
-    explicit MBTimer(IMBTimerEventConsumer& consumer);
+    explicit Timer(ITimerEventConsumer& consumer);
     /**
      * Destructor
      */
-    ~MBTimer();
+    ~Timer();
     /**
      * Deleted move constrcutor
      */
-    MBTimer(MBTimer&&) = delete;
+    Timer(Timer&&) = delete;
     /**
      * Deleted copy constrcutor
      */
-    MBTimer(const MBTimer&) = delete;
+    Timer(const Timer&) = delete;
     /**
      * Deleted move assignment operator
      */
-    MBTimer& operator=(MBTimer&&) = delete;
+    Timer& operator=(Timer&&) = delete;
     /**
      * Deleted copy assignment operator
      */
-    MBTimer& operator=(const MBTimer&) = delete;
+    Timer& operator=(const Timer&) = delete;
     /**
      * Compares timers based on the Timeout intervals
      * @result Result of comparison
      */
-    bool operator>(const MBTimer& rhs) const;
+    bool operator>(const Timer& rhs) const;
     /**
      * Checks if timers are same
      * @result Result of comparison
      */
-    bool operator==(const MBTimer& rhs) const;
+    bool operator==(const Timer& rhs) const;
     /**
      * Start timer
      * @param timeOut Time out when timer expires
-     * @param eventsCount Number of MBTimerEvent expected in total
+     * @param eventsCount Number of TimerEvent expected in total
      */
     void start(uint32_t timeOut, uint32_t eventsCount);
     /**
@@ -68,7 +68,7 @@ public:
     static const uint32_t CONTINUOUSLY{0xFFFFFFFFU};
 
 private:
-    IMBTimerEventConsumer& mConsumer;
+    ITimerEventConsumer& mConsumer;
     std::thread mThread;
     mutable std::mutex mThreadMutex;
     std::mutex mConditonVariableMutex;

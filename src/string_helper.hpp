@@ -5,25 +5,25 @@
 
 namespace string {
 
-class MBStringHelperPrivate;
+class StringHelperPrivate;
 
-class MBStringHelper {
+class StringHelper {
 public:
 
-    MBStringHelper();
+    StringHelper();
 
-    MBStringHelper(MBStringHelper&&) = delete;
-    MBStringHelper(const MBStringHelper&) = delete;
-    MBStringHelper& operator=(const MBStringHelper&) = delete;
-    MBStringHelper& operator=(MBStringHelper&&) = delete;
+    StringHelper(StringHelper&&) = delete;
+    StringHelper(const StringHelper&) = delete;
+    StringHelper& operator=(const StringHelper&) = delete;
+    StringHelper& operator=(StringHelper&&) = delete;
 
-    ~MBStringHelper() = default;
+    ~StringHelper() = default;
 
     /* ### PUBLIC APIs ### */
     int32_t getLength() const;
 
 private:
-    std::shared_ptr<MBStringHelperPrivate> m_mbstringhelper;
+    std::shared_ptr<StringHelperPrivate> m_stringhelper;
 };
 
 } // namespace string

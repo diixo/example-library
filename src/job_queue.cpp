@@ -4,22 +4,22 @@
 
 namespace queue {
 
-MBJobQueue::~MBJobQueue()
+JobQueue::~JobQueue()
 {
     stopExecution();
 }
 
-void MBJobQueue::startExecution()
+void JobQueue::startExecution()
 {
     // Joining the thread before start
     stopExecution();
 
     std::unique_lock<std::mutex> lock(mThreadMutex);
     mRunLoop = true;
-    mThread = std::thread(&MBJobQueue::run, this);
+    mThread = std::thread(&JobQueue::run, this);
 }
 
-void MBJobQueue::stopExecution()
+void JobQueue::stopExecution()
 {
     std::unique_lock<std::mutex> lock(mThreadMutex);
     mRunLoop = false;
@@ -32,14 +32,14 @@ void MBJobQueue::stopExecution()
     }
 }
 
-void MBJobQueue::addJob(std::function<void()> job)
+void JobQueue::addJob(std::function<void()> job)
 {
     std::unique_lock<std::mutex> lock(mQueueMutex);
     mQueue.push(std::move(job));
     mConditionVariable.notify_one();
 }
 
-void MBJobQueue::run()
+void JobQueue::run()
 {
     while (mRunLoop)
     {

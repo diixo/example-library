@@ -4,39 +4,39 @@
 
 namespace timer {
 
-MBTimer::MBTimer(IMBTimerEventConsumer& consumer)
+Timer::Timer(ITimerEventConsumer& consumer)
     : mConsumer(consumer)
 {
-    LOG_DEBUG("MBTimer::MBTimer, entered");
-    MBTimerEvent::addListener(this, &consumer);
+    LOG_DEBUG("Timer::Timer, entered");
+    TimerEvent::addListener(this, &consumer);
 }
 
-MBTimer::~MBTimer()
+Timer::~Timer()
 {
-    LOG_DEBUG("MBTimer::~MBTimer, entered");
-    MBTimerEvent::removeListener(this);
+    LOG_DEBUG("Timer::~Timer, entered");
+    TimerEvent::removeListener(this);
     stop();
 }
 
-bool MBTimer::isActive() const
+bool Timer::isActive() const
 {
     std::lock_guard<std::mutex> lock(mThreadMutex);
     return mEventsCount > 0;
 }
 
-bool MBTimer::operator>(const MBTimer& rhs) const
+bool Timer::operator>(const Timer& rhs) const
 {
     return mTimeout > rhs.mTimeout;
 }
 
-bool MBTimer::operator==(const MBTimer& rhs) const
+bool Timer::operator==(const Timer& rhs) const
 {
     return this == &rhs;
 }
 
-void MBTimer::start(uint32_t timeOut, uint32_t eventsCount)
+void Timer::start(uint32_t timeOut, uint32_t eventsCount)
 {
-    LOG_DEBUG("MBTimer::start entered, timeout = %d, eventsCount=%d", timeOut, eventsCount);
+    LOG_DEBUG("Timer::start entered, timeout = %d, eventsCount=%d", timeOut, eventsCount);
     if (0 == timeOut || 0 == eventsCount) {
         return;
     }
@@ -58,29 +58,29 @@ void MBTimer::start(uint32_t timeOut, uint32_t eventsCount)
                     = mConditionVariable.wait_for(lock, std::chrono::milliseconds(mTimeout.load()));
             }
             if (std::cv_status::timeout == timeoutStatus) {
-                LOG_DEBUG("MBTimer::thread timed out after %d milliseconds", mTimeout.load());
-                MBTimerEvent* event = MBTimerEvent::createEvent(MBTimerEventData(*this));
+                LOG_DEBUG("Timer::thread timed out after %d milliseconds", mTimeout.load());
+                TimerEvent* event = TimerEvent::createEvent(TimerEventData(*this));
                 event->send(this);
                 if (CONTINUOUSLY != mEventsCount) {
                     if (0 == --mEventsCount) {
-                        LOG_DEBUG("MBTimer::thread, no events pending. Exiting loop");
+                        LOG_DEBUG("Timer::thread, no events pending. Exiting loop");
                         mRunLoop = false;
                     }
                 }
             } else {
                 LOG_DEBUG(
-                    "MBTimer::thread with timeout %d milliseconds has been stopped",
+                    "Timer::thread with timeout %d milliseconds has been stopped",
                     mTimeout.load());
             }
         }
         mEventsCount = 0;
     });
-    LOG_DEBUG("MBTimer::start, started the loop");
+    LOG_DEBUG("Timer::start, started the loop");
 }
 
-void MBTimer::stop()
+void Timer::stop()
 {
-    LOG_DEBUG("MBTimer::stop entered");
+    LOG_DEBUG("Timer::stop entered");
     std::lock_guard<std::mutex> lock(mThreadMutex);
     mRunLoop = false;
     {
@@ -90,7 +90,7 @@ void MBTimer::stop()
     if (mThread.joinable()) {
         mThread.join();
     }
-    LOG_DEBUG("MBTimer::stop, joined thread");
+    LOG_DEBUG("Timer::stop, joined thread");
 }
 
 } // namespace timer
