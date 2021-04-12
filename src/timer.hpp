@@ -15,7 +15,7 @@ class Timer {
 public:
     /**
      * Constructor
-     * @param consumer Consumer of MBTimerEvent
+     * @param consumer Consumer of TimerEvent
      */
     explicit Timer(ITimerEventConsumer& consumer);
     /**
