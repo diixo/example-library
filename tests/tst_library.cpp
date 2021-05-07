@@ -9,7 +9,7 @@
  *
  */
 
-#include "examplepublicclass.h"
+#include "examplepublicclass.hpp"
 
 #include <gtest/gtest.h>
 #include <typeinfo>

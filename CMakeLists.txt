@@ -17,8 +17,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(TARGET ${PROJECT_NAME})
 
 # Target source files
-file(GLOB SOURCE_FILES      "src/*.cpp" "src/*.h")
-file(GLOB PUBLIC_HEADERS    "include/*.h")
+file(GLOB SOURCE_FILES      "src/*.cpp" "src/*.hpp")
+file(GLOB PUBLIC_HEADERS    "include/*.hpp")
 
 # Declare library
 add_library(${TARGET} SHARED ${SOURCE_FILES} ${PUBLIC_HEADERS})

@@ -9,7 +9,7 @@
  *
  */
 
-#include "exampleprivateclass.h"
+#include "exampleprivateclass.hpp"
 
 #include <iostream>
 

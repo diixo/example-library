@@ -1,4 +1,5 @@
-set(TARGET tst_library)
+set(TARGET main_example)
+set(TEST_TARGET test_library)
 
 #include(AddGMock)
 #add_gmock()
@@ -7,7 +8,7 @@ set(TARGET tst_library)
 
 file(GLOB TEST_SOURCE_FILES
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/src/*.h"
+    "${CMAKE_SOURCE_DIR}/src/*.hpp"
     tst_library.cpp
 )
 
@@ -16,5 +17,7 @@ include_directories(
     "../src"
 )
 
+add_executable (${TARGET} "main_example.cpp")
+
 #enable_testing()
-#add_gtest_test(${TARGET} "${TEST_SOURCE_FILES}" "")
+#add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")

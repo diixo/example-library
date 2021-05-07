@@ -9,8 +9,8 @@
  *
  */
 
-#include "examplepublicclass.h"
-#include "exampleprivateclass.h"
+#include "examplepublicclass.hpp"
+#include "exampleprivateclass.hpp"
 
 #include <iostream>
 
