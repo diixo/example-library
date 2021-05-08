@@ -3,7 +3,6 @@ set(TEST_TARGET test_library)
 
 #include(AddGMock)
 #add_gmock()
-
 #include(AddGTestTest)
 
 file(GLOB TEST_SOURCE_FILES
@@ -17,7 +16,7 @@ include_directories(
     "../src"
 )
 
-add_executable (${TARGET} "main_example.cpp")
+add_executable (${TARGET} "main_thread.cpp")
 
 #enable_testing()
 #add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")
