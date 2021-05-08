@@ -1,7 +1,8 @@
+
 // this_thread::yield example
-#include <iostream>       // std::cout
-#include <thread>         // std::thread, std::this_thread::yield
-#include <atomic>         // std::atomic
+#include <iostream>
+#include <thread>
+#include <atomic>
 
 const int sz = 8;
 std::atomic<bool> ready(false);
@@ -28,7 +29,10 @@ int main ()
    ready = true;               // go!
    for (auto& th : threads)
    {
-      th.join();
+      // blocks the execution of the thread that calls this function 
+      // until the function called on construction returns (if it hasn't yet).
+      if (th.joinable())
+         th.join();
    }
    std::cout << " <<-\n";
 
