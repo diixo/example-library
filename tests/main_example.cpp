@@ -41,8 +41,9 @@ private:
    void dispatch_thread_handler(void);
 };
 
-dispatch_queue::dispatch_queue(std::string name, size_t thread_cnt) :
-   name_{ std::move(name) }, threads_(thread_cnt)
+dispatch_queue::dispatch_queue(std::string name, size_t thread_cnt)
+   : name_{ std::move(name) }
+   , threads_(thread_cnt)
 {
    printf("Creating dispatch queue: %s\n", name_.c_str());
    printf("Dispatch threads: %zu\n", thread_cnt);
@@ -103,17 +104,22 @@ void dispatch_queue::dispatch_thread_handler(void)
    do {
       //Wait until we have data or a quit signal
       cv_.wait(lock, [this] {
+         printf("<<== dispatch_thread_handler\n");
          return (q_.size() || quit_);
       });
+
+      printf(">>>>>>>>\n");
 
       //after wait, we own the lock
       if (!quit_ && q_.size())
       {
          auto op = std::move(q_.front());
          q_.pop();
-
+         printf("op>>\n");
          //unlock now that we're done messing with the queue
          lock.unlock();
+
+         printf("op\n");
 
          op();
 
