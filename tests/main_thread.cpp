@@ -30,7 +30,7 @@ int main ()
    ready = true;               // go!
    for (auto& th : threads)
    {
-      if (th.joinable())
+      //if (th.joinable())
       {
          // blocks the execution of the thread that calls this function 
          // until the function called on construction returns (if it hasn't yet).
