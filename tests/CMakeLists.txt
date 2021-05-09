@@ -1,5 +1,5 @@
 set(TARGET main_example)
-set(TEST_TARGET test_library)
+#set(TEST_TARGET test_library)
 
 #include(AddGMock)
 #add_gmock()
