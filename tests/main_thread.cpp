@@ -25,17 +25,15 @@ int main ()
 
    for (int i = 0; i < sz; ++i)
    {
+      // set thread as joinable
       threads[i] = std::thread(count1m, i);
    }
    ready = true;               // go!
    for (auto& th : threads)
    {
-      //if (th.joinable())
-      {
-         // blocks the execution of the thread that calls this function 
-         // until the function called on construction returns (if it hasn't yet).
-         th.join();
-      }
+      // blocks the execution of the thread that calls this function 
+      // until the function called on construction returns (if it hasn't yet).
+      th.join();
    }
    std::cout << " <<-\n";
 
