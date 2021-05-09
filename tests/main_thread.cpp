@@ -11,6 +11,7 @@ void count1m(int id)
 {
    while (!ready) // wait until main() sets ready...
    {
+      // binded thread waits for other threads to advance without blocking.
       std::this_thread::yield();
    }
    for (volatile int i = 0; i < 1000000; ++i) {}
@@ -20,7 +21,7 @@ void count1m(int id)
 int main ()
 {
    std::thread threads[sz];
-   std::cout << "race of 10 threads that count to 1 million:\n";
+   std::cout << "race of threads that count to 1 million:\n";
 
    for (int i = 0; i < sz; ++i)
    {
@@ -29,10 +30,12 @@ int main ()
    ready = true;               // go!
    for (auto& th : threads)
    {
-      // blocks the execution of the thread that calls this function 
-      // until the function called on construction returns (if it hasn't yet).
       if (th.joinable())
+      {
+         // blocks the execution of the thread that calls this function 
+         // until the function called on construction returns (if it hasn't yet).
          th.join();
+      }
    }
    std::cout << " <<-\n";
 
