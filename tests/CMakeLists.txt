@@ -1,4 +1,4 @@
-set(TARGET main_example)
+set(TARGET test_thread)
 #set(TEST_TARGET test_library)
 
 #include(AddGMock)
@@ -17,6 +17,7 @@ include_directories(
 )
 
 add_executable (${TARGET} "main_thread.cpp")
+add_executable (test_cv_wait "main_cv_wait.cpp")
 
 #enable_testing()
 #add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")
