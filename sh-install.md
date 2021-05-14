@@ -50,4 +50,8 @@ sudo apt-get install libsqlite3-dev
 
 #for dbus-lib compilation
 sudo apt-get install autoconf-archive
+
+#unicode-libraries
+sudo apt-get install libunistring-dev
+sudo apt-get install -y icu-devtools
 ```
