@@ -58,4 +58,4 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/example-library.pc DESTINATION ${CMAKE
 
 enable_testing()
 add_subdirectory(tests)
-add_subdirectory(ipc)
+add_subdirectory(itc)
