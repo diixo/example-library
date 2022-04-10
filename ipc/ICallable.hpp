@@ -1,15 +1,16 @@
 
 #pragma once
 
-namespace ipc {
+namespace itc {
 
-    namespace _private {
+namespace _private {
 
-        class ICallable {
-        public:
-            virtual ~ICallable() = default;
-            virtual void call() const = 0;
-        };
+class ICallable
+{
+public:
+   virtual ~ICallable() = default;
+   virtual void call() const = 0;
+};
 
-    }
+}
 }

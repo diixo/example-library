@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-namespace ipc
+namespace itc
 {
    class logInfo : public std::ostringstream
    {

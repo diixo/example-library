@@ -1,9 +1,3 @@
-/** @file tuple_utils.h
- *  @brief Expand tuple utils
- *
- *  @date 2019
- *  @author Alexander Geronime
- */
 
 #pragma once
 

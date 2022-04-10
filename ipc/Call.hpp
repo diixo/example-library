@@ -10,7 +10,7 @@
 #include <condition_variable>
 
 
-namespace ipc {
+namespace itc {
 
 template <typename... Args>
 class CallStatic : public _private::ICallable
@@ -102,17 +102,17 @@ private:
 };
 
 template <typename... Args>
-class InlineCall : public ipc::_private::CallBinder
+class InlineCall : public itc::_private::CallBinder
 {
 public:
     InlineCall<Args...>(const std::string& threadId, const std::function<void(Args...)>& func, Args... args)
-        : CallBinder(threadId, std::make_shared<ipc::CallStatic<Args...>>(func, std::make_tuple(args...)))
+        : CallBinder(threadId, std::make_shared<itc::CallStatic<Args...>>(func, std::make_tuple(args...)))
     {
 
     }
 };
 
-bool invoke(const ipc::_private::CallBinder& callBinder);
+bool invoke(const itc::_private::CallBinder& callBinder);
 template <typename ContextRequest, typename ContextResponse, typename Ret, typename... Args>
 class Request : public _private::ICallable
 {
@@ -156,14 +156,14 @@ public:
     {
         if (mIsLamdaResponse)
         {
-            invoke(ipc::InlineCall<Ret>(
+            invoke(itc::InlineCall<Ret>(
                 mResponseThread, mLambdaResponse, std::forward<Ret>(tuple_utils::apply(mContextRequest, mRequest, mParams))));
         }
         else
         {
             invoke(_private::CallBinder(
                 mResponseThread,
-                std::make_shared<ipc::Call<ContextResponse, Ret>>(
+                std::make_shared<itc::Call<ContextResponse, Ret>>(
                     mContextResponse, mResponse, std::make_tuple<Ret>(tuple_utils::apply(mContextRequest, mRequest, mParams)))));
         }
     }
@@ -225,13 +225,13 @@ private:
 };
 
 template <typename... Args>
-class InlineEvent : public ipc::_private::CallBinder
+class InlineEvent : public itc::_private::CallBinder
 {
 public:
     InlineEvent<Args...>(const std::function<void(Args...)>& func, Args... args)
-        : CallBinder(ipc::currentThreadName(), std::make_shared<ipc::CallStatic<Args...>>(func, std::make_tuple(args...)))
+        : CallBinder(itc::currentThreadName(), std::make_shared<itc::CallStatic<Args...>>(func, std::make_tuple(args...)))
     {
     }
 };
 
-} // namespace ipc
+} // namespace itc

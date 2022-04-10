@@ -9,7 +9,7 @@
 #include <thread>
 
 
-namespace ipc {
+namespace itc {
 namespace _private {
 
 class ICallable;
@@ -19,32 +19,33 @@ class Call;
 class EventLoop
 {
 public:
-    explicit EventLoop(const std::string& threadName);
-    ~EventLoop() = default;
-    EventLoop(const EventLoop&) = delete;
-    EventLoop& operator=(const EventLoop&) = delete;
 
-    void stop();
+   explicit EventLoop(const std::string& threadName);
+   ~EventLoop() = default;
+   EventLoop(const EventLoop&) = delete;
+   EventLoop& operator=(const EventLoop&) = delete;
 
-    std::thread::id getThreadId() const;
-    const std::string& getThreadName() const;
-    static std::thread::id getCurrentThreadId();
+   void stop();
 
-    void push(std::shared_ptr<ICallable> call);
+   std::thread::id getThreadId() const;
+   const std::string& getThreadName() const;
+   static std::thread::id getCurrentThreadId();
+
+   void push(std::shared_ptr<ICallable> call);
 
 private:
 
-    void run();
+   void run();
 
-    std::thread mThread;
-    bool mbStop;
-    std::thread::id mThreadId;
-    const std::string mThreadName;
+   std::thread mThread;
+   bool mbStop;
+   std::thread::id mThreadId;
+   const std::string mThreadName;
 
-    std::queue<std::shared_ptr<Event>> mEvents;
+   std::queue<std::shared_ptr<Event>> mEvents;
 
-    std::mutex mMutex;
-    std::condition_variable mCV;
+   std::mutex mMutex;
+   std::condition_variable mCV;
 };
 
 } // namespace _private

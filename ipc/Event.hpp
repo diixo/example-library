@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace ipc {
+namespace itc {
     namespace _private {
 
         class ICallable;

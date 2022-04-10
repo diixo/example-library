@@ -9,7 +9,7 @@
 #include "EventLoop.hpp"
 
 
-namespace ipc {
+namespace itc {
 namespace _private {
 
 std::recursive_mutex Dispatcher::gMutex;
@@ -26,7 +26,7 @@ void Dispatcher::registerEventLoop(std::shared_ptr<EventLoop> eventLoop)
    if (mThreads.find(id) == mThreads.end())
    {
       mThreads[id] = eventLoop;
-      ipc::logInfo() << "Dispatcher::registerEventLoop " << id << " " << eventLoop->getThreadName() << " size=" << mThreads.size();
+      itc::logInfo() << "Dispatcher::registerEventLoop " << id << " " << eventLoop->getThreadName() << " size=" << mThreads.size();
    }
 }
 
@@ -41,7 +41,7 @@ void Dispatcher::printThreads() const
    std::lock_guard<std::recursive_mutex> lock(gMutex);
    for (auto thread : mThreads)
    {
-      ipc::logInfo() << thread.first << ':' << thread.second->getThreadName() << " " << thread.second->getThreadId();
+      itc::logInfo() << thread.first << ':' << thread.second->getThreadName() << " " << thread.second->getThreadId();
    }
 }
 
@@ -78,4 +78,4 @@ std::shared_ptr<EventLoop> Dispatcher::getThreadByName(const std::string& name) 
    }
 }
 } // namespace _private
-} // namespace ipc
+} // namespace itc

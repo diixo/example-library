@@ -2,7 +2,7 @@
 
 #include "ipc.hpp"
 
-namespace ipc
+namespace itc
 {
    void createEventLoop(const std::string& threadName)
    {

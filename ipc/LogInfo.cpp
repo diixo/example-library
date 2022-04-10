@@ -1,7 +1,7 @@
 
 #include "LogInfo.hpp"
 
-namespace ipc
+namespace itc
 {
    std::mutex logInfo::_mutexPrint{};
 }

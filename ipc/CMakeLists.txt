@@ -1,6 +1,7 @@
-set(TEST_IPC test_ipc)
 
-add_executable (${TEST_IPC} 
+set(TEST_ITC test_itc)
+
+add_executable (${TEST_ITC} 
    "test_ipc.cpp"
    "EventLoop.cpp"
    "Dispatcher.cpp"

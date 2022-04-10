@@ -1,11 +1,3 @@
-/** @file Dispatcher.h
- *  @brief Dispatcher class declaration
- *
- *  Contains collection of created event loops and dispatch invoced event to event loops
- *
- *  @date 2019
- *  @author Alexander Geronime
- */
 
 #pragma once
 
@@ -15,7 +7,7 @@
 #include <string>
 #include <thread>
 
-namespace ipc {
+namespace itc {
 namespace _private {
 
 class EventLoop;
