@@ -2,10 +2,13 @@
 #include <algorithm>
 #include <chrono>
 
+#include "LogInfo.hpp"
 #include "EventLoop.hpp"
 #include "Call.hpp"
 #include "Event.hpp"
 
+
+static const bool LOG_ENABLE = false;
 
 namespace ipc {
 namespace _private {
@@ -40,6 +43,9 @@ std::thread::id EventLoop::getCurrentThreadId()
 
 void EventLoop::push(std::shared_ptr<ICallable> call)
 {
+    if (LOG_ENABLE)
+        ipc::logInfo() << getThreadName() << " EventLoop::push";
+
     std::unique_lock <std::mutex> lock(mMutex);
     if (!mbStop)
     {
@@ -51,21 +57,42 @@ void EventLoop::push(std::shared_ptr<ICallable> call)
 
 void EventLoop::stop()
 {
-   std::unique_lock <std::mutex> lock(mMutex);
+#ifdef SYS_gettid
+    itc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ", " << syscall(SYS_gettid) << ")";
+#else
+    ipc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ")";
+#endif
+   {
+      std::unique_lock <std::mutex> lock(mMutex);
 
-   std::queue<std::shared_ptr<Event>> empty;
-   std::swap(mEvents, empty);
+      std::queue<std::shared_ptr<Event>> empty;
+      std::swap(mEvents, empty);
 
-   mbStop = true;
-   mCV.notify_one();
+      mbStop = true;
+      mCV.notify_one();
+   }
+   if (LOG_ENABLE)
+      ipc::logInfo() << getThreadName() << " EventLoop::stopThread unlocked";
 
    mThread.join();
+
+    if (LOG_ENABLE)
+        ipc::logInfo() << getThreadName() << " EventLoop::stopThread exit";
 }
 
 void EventLoop::run()
 {
+#ifdef SYS_gettid
+    ipc::logInfo() << "EventLoop::run(). " << mThreadName << "(" << std::this_thread::get_id() << ", " << syscall(SYS_gettid) << ")";
+#else
+    ipc::logInfo() << "EventLoop::run(). " << mThreadName << "(" << std::this_thread::get_id() << ")";
+#endif
+
     while (!mbStop)
     {
+        if (LOG_ENABLE)
+            ipc::logInfo() << getThreadName() << " loop";
+
         std::shared_ptr<Event> event = nullptr;
         {
             // std::contidion_variable::wait_for with max period not wait, so will use just some big period value for wait if no timers
@@ -73,12 +100,18 @@ void EventLoop::run()
             //auto timeToNextTimer = boost::chrono::milliseconds(1000000);
 
             std::unique_lock<std::mutex> lock(mMutex);
+            if (LOG_ENABLE)
+                ipc::logInfo() << getThreadName() << " pass lock";
 
             if (event == nullptr)
             {
                 if (mEvents.empty() && !mbStop)
                 {
+                    if (LOG_ENABLE)
+                        ipc::logInfo() << getThreadName() << " wait_for " << timeToNextTimer.count();
                     mCV.wait_for(lock, timeToNextTimer /*[this]() { return (!mEvents.empty()); } */);
+                    if (LOG_ENABLE)
+                        ipc::logInfo() << getThreadName() << " exit wait_for " << timeToNextTimer.count();
                 }
 
                 if (mEvents.empty())
@@ -89,9 +122,13 @@ void EventLoop::run()
             }
         }
 
+        if (LOG_ENABLE)
+            ipc::logInfo() << getThreadName() << " got event and call. mEvents.size: " << mEvents.size();
         std::shared_ptr<ICallable> callable = event->getCallable();
         callable->call();
     }
+
+    ipc::logInfo() << "Exit event loop " << mThreadName;
 }
 
 } // namespace _private

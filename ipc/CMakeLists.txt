@@ -6,4 +6,5 @@ add_executable (${TEST_IPC}
    "Dispatcher.cpp"
    "Event.cpp"
    "LogInfo.cpp"
+   "ipc.cpp"
 )
