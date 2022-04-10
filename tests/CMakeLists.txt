@@ -16,8 +16,8 @@ include_directories(
     "../src"
 )
 
-add_executable (${TARGET} "main_thread.cpp")
-add_executable (test_cv_wait "main_cv_wait.cpp")
+add_executable (${TARGET} "test_thread.cpp")
+add_executable (test_cv_wait "test_cv_wait.cpp")
 
 #enable_testing()
 #add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")
