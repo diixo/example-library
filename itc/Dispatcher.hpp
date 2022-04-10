@@ -26,6 +26,8 @@ public:
 
     void printThreads() const;
 
+    bool isEmpty() const;
+
     std::shared_ptr<EventLoop> getThreadByName(const std::string& name) const;
     std::shared_ptr<EventLoop> getThreadById(const std::thread::id& id) const;
 

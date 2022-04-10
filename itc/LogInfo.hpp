@@ -13,7 +13,7 @@ namespace itc
       ~logInfo()
       {
          std::lock_guard<std::mutex> guard(_mutexPrint);
-         std::cout << this->str();
+         std::cout << this->str() << std::endl;
       }
 
    private:

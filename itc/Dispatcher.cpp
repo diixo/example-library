@@ -77,5 +77,12 @@ std::shared_ptr<EventLoop> Dispatcher::getThreadByName(const std::string& name) 
       return nullptr;
    }
 }
+
+bool Dispatcher::isEmpty() const
+{
+   std::lock_guard<std::recursive_mutex> lock(gMutex);
+   return mThreads.empty();
+}
+
 } // namespace _private
 } // namespace itc

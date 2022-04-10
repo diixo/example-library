@@ -8,7 +8,7 @@
 #include "Event.hpp"
 
 
-static const bool LOG_ENABLE = false;
+static const bool LOG_ENABLE = true;
 
 namespace itc {
 namespace _private {
@@ -101,7 +101,7 @@ void EventLoop::run()
 
             std::unique_lock<std::mutex> lock(mMutex);
             if (LOG_ENABLE)
-                itc::logInfo() << getThreadName() << " pass lock";
+                itc::logInfo() << getThreadName() << " pass lock, id=" << mThreadId;
 
             if (event == nullptr)
             {
