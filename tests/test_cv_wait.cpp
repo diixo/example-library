@@ -4,6 +4,26 @@
 #include <mutex>              // std::mutex, std::unique_lock
 #include <condition_variable> // std::condition_variable
 
+////////////////////////////////////////////////////
+#include <sstream>
+
+class logInfo : public std::ostringstream
+{
+public:
+   logInfo() = default;
+
+   ~logInfo()
+   {
+      std::lock_guard<std::mutex> guard(_mutexPrint);
+      std::cout << this->str() << std::endl;
+   }
+
+private:
+   static std::mutex _mutexPrint;
+};
+std::mutex logInfo::_mutexPrint{};
+/////////////////////////////////////////////////////
+
 std::mutex mtx;
 std::condition_variable cv;
 
@@ -22,7 +42,7 @@ void consume (int n)
     
     cv.wait(lck, shipment_available);
     // consume:
-    std::cout << cargo << '\n';
+    logInfo() << cargo;
     cargo = 0;
   }
 }
