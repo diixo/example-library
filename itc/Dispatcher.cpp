@@ -26,7 +26,7 @@ void Dispatcher::registerEventLoop(std::shared_ptr<EventLoop> eventLoop)
    if (mThreads.find(id) == mThreads.end())
    {
       mThreads[id] = eventLoop;
-      itc::logInfo() << "Dispatcher::registerEventLoop " << id << " " << eventLoop->getThreadName() << " size=" << mThreads.size();
+      itc::logInfo() << "Dispatcher::registerEventLoop="<< eventLoop->getThreadName() << " tid=" << id << ", sz=" << mThreads.size();
    }
 }
 

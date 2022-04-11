@@ -83,9 +83,9 @@ void EventLoop::stop()
 void EventLoop::run()
 {
 #ifdef SYS_gettid
-    itc::logInfo() << "EventLoop::run(). " << mThreadName << "(" << std::this_thread::get_id() << ", " << syscall(SYS_gettid) << ")";
+    itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id() << ", " << syscall(SYS_gettid) << ")";
 #else
-    itc::logInfo() << "EventLoop::run(). " << mThreadName << "(" << std::this_thread::get_id() << ")";
+    itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id();
 #endif
 
     while (!mbStop)
@@ -96,8 +96,8 @@ void EventLoop::run()
         std::shared_ptr<Event> event = nullptr;
         {
             // std::contidion_variable::wait_for with max period not wait, so will use just some big period value for wait if no timers
-            auto timeToNextTimer = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::duration::max());
-            //auto timeToNextTimer = boost::chrono::milliseconds(1000000);
+            //auto timeToNextTimer = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::duration::max());
+            auto timeToNextTimer = std::chrono::milliseconds(1000000);
 
             std::unique_lock<std::mutex> lock(mMutex);
             if (LOG_ENABLE)
@@ -109,13 +109,16 @@ void EventLoop::run()
                 {
                     if (LOG_ENABLE)
                         itc::logInfo() << getThreadName() << " wait_for " << timeToNextTimer.count();
-                    mCV.wait_for(lock, timeToNextTimer /*[this]() { return (!mEvents.empty()); } */);
+                    mCV.wait_for(lock, timeToNextTimer /*, [this]() { return (!mEvents.empty()); } */);
                     if (LOG_ENABLE)
                         itc::logInfo() << getThreadName() << " exit wait_for " << timeToNextTimer.count();
                 }
 
                 if (mEvents.empty())
                     continue;
+
+                if (LOG_ENABLE)
+                   itc::logInfo() << getThreadName() << " event handling";
 
                 event = mEvents.front();
                 mEvents.pop();
