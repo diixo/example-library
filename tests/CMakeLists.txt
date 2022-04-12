@@ -17,7 +17,8 @@ include_directories(
 )
 
 add_executable (${TARGET} "test_thread.cpp" "LogInfo.cpp")
-add_executable (test_cv_wait "test_cv_wait_yield.cpp" "LogInfo.cpp")
+add_executable (test_cv_wait_yield "test_cv_wait_yield.cpp" "LogInfo.cpp")
+add_executable (test_cv_wait "test_cv_wait.cpp" "LogInfo.cpp")
 
 #enable_testing()
 #add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")
