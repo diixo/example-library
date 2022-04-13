@@ -204,19 +204,22 @@
     typedef TRequest<__VA_ARGS__> Request;                                                                                  \
     }
 
+namespace itc {
 
+extern const std::string UNKNOWN_THREAD_NAME;
 
+// Create thread and register in Dispatcher, threadName should be UNIQE for all application
+void createEventLoop(const std::string& threadName);
 
-namespace itc
-{
-   bool invoke(const std::string& threadName, std::shared_ptr<_private::ICallable> call);
+// Stop event loop
+void stopEventLoop(const std::string& threadName);
 
-   // Create thread and register in Dispatcher, threadName should be UNIQE for all application
-   void createEventLoop(const std::string& threadName);
+// Invoke ICallable object on binded thread.
+// * callBinder - binder ICallable object types to thread should be declared using one of macro:
+// DECLARE_STATIC_CALL, DECLARE_CALL, DECLARE_EVENT, DECLARE_REQUEST
+bool invoke(const itc::_private::CallBinder& callBinder);
 
-   void stopEventLoop(const std::string& threadName);
+// Returns name of current thread
+const std::string& currentThreadName();
 
-   bool invoke(const itc::_private::CallBinder& callBinder);
-
-   const std::string& currentThreadName();
-}
+} // namespace itc
