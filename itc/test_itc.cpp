@@ -21,25 +21,25 @@ struct EventConsumer
 {
    void func1()
    {
-      std::cout << itc::currentThreadName() << ": EventConsumer::func1()" << std::endl;
+      std::cout << itc::currentThreadName() << " --EventConsumer::func1()" << std::endl;
       aCounter++;
    }
 
    void func2(int i)
    {
-      std::cout << itc::currentThreadName() << ": EventConsumer::func2(" << i << ")" << std::endl;
+      std::cout << itc::currentThreadName() << " --EventConsumer::func2(" << i << ")" << std::endl;
       aCounter++;
    }
 
    void func3(std::string s, int i, float f)
    {
-      std::cout << itc::currentThreadName() << ": EventConsumer::func3(" << s << ", " << i << ", " << f << ")" << std::endl;
+      std::cout << itc::currentThreadName() << " --EventConsumer::func3(" << s << ", " << i << ", " << f << ")" << std::endl;
       aCounter++;
    }
 
    void func4(std::shared_ptr<A> a)
    {
-      std::cout << itc::currentThreadName() << ": EventConsumer::func4(" << a << ")" << std::endl;
+      std::cout << itc::currentThreadName() << " --EventConsumer::func4(" << a << ")" << std::endl;
       aCounter++;
    }
 };
@@ -49,7 +49,7 @@ DECLARE_EVENT(EVENT_func2, EventConsumer, func2, int)
 DECLARE_EVENT(EVENT_func3, EventConsumer, func3, std::string, int, float)
 DECLARE_EVENT(EVENT_func4, EventConsumer, func4, std::shared_ptr<A>)
 
-// fill events list to call into consumer from another thread 
+// fill events list to call consumer-methods from another thread 
 void startEventDemo()
 {
    auto consumer = std::make_shared<EventConsumer>();

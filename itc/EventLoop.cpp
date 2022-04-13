@@ -91,7 +91,7 @@ void EventLoop::run()
     while (!mbStop)
     {
         if (LOG_ENABLE)
-            itc::logInfo() << getThreadName() << " loop...";
+            itc::logInfo() << getThreadName() << " loop... sz=" << mEvents.size();
 
         std::shared_ptr<Event> event = nullptr;
         {
@@ -106,11 +106,11 @@ void EventLoop::run()
                 if (mEvents.empty() && !mbStop)
                 {
                     if (LOG_ENABLE)
-                        itc::logInfo() << getThreadName() << " wait_for " << timeToNextTimer.count();
+                        itc::logInfo() << getThreadName() << " wait_for sz=" << mEvents.size();
                     //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
                     mCV.wait(lock, [this]() { return (!mEvents.empty()); } );
                     if (LOG_ENABLE)
-                        itc::logInfo() << getThreadName() << " exit wait_for " << timeToNextTimer.count();
+                        itc::logInfo() << getThreadName() << " exit wait_for sz=" << mEvents.size();
                 }
 
                 if (mEvents.empty())
