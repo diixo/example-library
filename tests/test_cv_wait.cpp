@@ -1,4 +1,7 @@
 
+// https://en.cppreference.com/w/cpp/thread/condition_variable/notify_all
+// https://en.cppreference.com/w/cpp/thread/condition_variable/wait
+
 #include <iostream>
 #include <condition_variable>
 #include <thread>

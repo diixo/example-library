@@ -91,7 +91,7 @@ void EventLoop::run()
     while (!mbStop)
     {
         if (LOG_ENABLE)
-            itc::logInfo() << getThreadName() << " loop";
+            itc::logInfo() << getThreadName() << " loop...";
 
         std::shared_ptr<Event> event = nullptr;
         {
