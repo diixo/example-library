@@ -1,9 +1,7 @@
 
 #include "itc.hpp"
-#include <atomic>
 
 const std::string thread_name1("thread1");
-std::atomic<int> aCounter = 0;
 
 struct A
 {
@@ -22,25 +20,21 @@ struct EventConsumer
    void func1()
    {
       std::cout << itc::currentThreadName() << " --EventConsumer::func1()" << std::endl;
-      aCounter++;
    }
 
    void func2(int i)
    {
       std::cout << itc::currentThreadName() << " --EventConsumer::func2(" << i << ")" << std::endl;
-      aCounter++;
    }
 
    void func3(std::string s, int i, float f)
    {
       std::cout << itc::currentThreadName() << " --EventConsumer::func3(" << s << ", " << i << ", " << f << ")" << std::endl;
-      aCounter++;
    }
 
    void func4(std::shared_ptr<A> a)
    {
       std::cout << itc::currentThreadName() << " --EventConsumer::func4(" << a << ")" << std::endl;
-      aCounter++;
    }
 };
 
@@ -62,7 +56,6 @@ void startEventDemo()
 
 DECLARE_STATIC_CALL(STATIC_CALL_ED_start, thread_name1, startEventDemo)
 
-
 int main()
 {
    itc::logInfo() << "main_tid:" << std::this_thread::get_id();
@@ -73,8 +66,10 @@ int main()
 
    while (!itc::_private::Dispatcher::getInstance().isEmpty())
    {
+      auto event = itc::_private::Dispatcher::getInstance().getThreadByName(thread_name1);
+
       // waiting while all events finish responses by calling from parallel thread.
-      if (aCounter == 4)
+      if (event && (event->size() == 0))
       {
          break;
       }

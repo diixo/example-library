@@ -7,6 +7,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <atomic>
 
 
 namespace itc {
@@ -33,6 +34,9 @@ public:
 
    void push(std::shared_ptr<ICallable> call);
 
+   // return amount of active events, that not finished yet.
+   size_t size() const;
+
 private:
 
    void run();
@@ -46,7 +50,14 @@ private:
 
    std::mutex mMutex;
    std::condition_variable mCV;
+
+   std::atomic<size_t> mSize;
 };
+
+inline size_t EventLoop::size() const
+{
+   return mSize;
+}
 
 } // namespace _private
 }

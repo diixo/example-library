@@ -21,6 +21,7 @@ EventLoop::EventLoop(const std::string& threadName)
    , mEvents()
    , mMutex()
    , mCV()
+   , mSize(0)
 {
    mThread = std::thread(&EventLoop::run, this);
    mThreadId = mThread.get_id();    
@@ -51,6 +52,7 @@ void EventLoop::push(std::shared_ptr<ICallable> call)
     {
         mEvents.push(std::make_shared<Event>(call));
         mCV.notify_one();
+        ++mSize;
     }
 }
 
@@ -128,6 +130,11 @@ void EventLoop::run()
             itc::logInfo() << getThreadName() << " got event and call. mEvents.size: " << mEvents.size();
         std::shared_ptr<ICallable> callable = event->getCallable();
         callable->call();
+
+        {
+           std::unique_lock<std::mutex> lock(mMutex);
+           --mSize;
+        }
     }
 
     itc::logInfo() << "Exit event loop " << mThreadName;
