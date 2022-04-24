@@ -56,6 +56,116 @@ void startEventDemo()
 
 DECLARE_STATIC_CALL(STATIC_CALL_ED_start, thread_name1, startEventDemo)
 
+// common characters sequence, which consists only of characters that are part of str2.
+int strnspn(const char * s1, const char * s2)
+{
+   const char * pch = s1;
+   int n = 0;
+
+   while (*s1 && *s2)
+   {
+      pch = strchr(s2, *s1);
+      if (pch)
+      {
+         n++;
+         printf("%c", *s1);
+      }
+      ++s1;
+   }
+   return n;
+}
+
+// commonly biggest substring, which consists only of characters that are part of str2.
+// return number of common chars sequence
+int strncstr(const char * s1, const char * s2)
+{
+   const char * pch = s2;
+   int n = 0;
+   int nmax = 0;
+
+   while (*s1)
+   {
+      if (*pch == *s1)
+      {
+         ++n;
+         ++pch;
+      }
+      else
+      {
+         pch = s2; // TODO:?
+         n = 0;
+         const char *search = strchr(pch, *s1);
+         if (search)
+         {
+            pch = search;
+            ++pch;
+            ++n;
+         }
+      }
+      if (nmax < n)
+      {
+         nmax = n;
+      }
+      ++s1;
+   }
+   return nmax;
+}
+
+
+// commonly biggest substring, which consists only of characters that are part of str2.
+std::string strsstr(const char * s1, const char * s2)
+{
+   const char * pch = s2;
+   int n = 0;
+   int nmax = 0;
+   //////////////////////////////////////////////////////////////////////////
+   const char* search = pch;
+   const char* result = 0;
+
+   while (*s1)
+   {
+      if (*pch == *s1)
+      {
+         ++n;
+         ++pch;
+      }
+      else
+      {
+         pch = s2; // TODO:?
+         n = 0;
+         search = strchr(pch, *s1);
+         if (search)
+         {
+            pch = search;
+            ++pch;
+            ++n;
+         }
+      }
+      if (nmax < n)
+      {
+         result = search;
+         nmax = n;
+      }
+      ++s1;
+   }
+   return (nmax > 1) ? std::string(result, nmax) : std::string();
+}
+
+/*
+int i;
+//char strtext[] = "121236dd9033ww903332b903333f";
+//char cset[] = "1234903333e";
+
+char strtext[] = "12a39";
+char cset[] = "1023";
+
+i = strncstr(strtext, cset);
+printf("The initial number has %d digits.\n", i);
+std::cout << strsstr(strtext, cset);
+//printf("\nThe initial number has %d digits.\n", i);
+return 0;
+*/
+
 int main()
 {
    itc::logInfo() << "main_tid:" << std::this_thread::get_id();
