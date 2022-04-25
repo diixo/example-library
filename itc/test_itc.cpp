@@ -68,7 +68,6 @@ int strnspn(const char * s1, const char * s2)
       if (pch)
       {
          n++;
-         printf("%c", *s1);
       }
       ++s1;
    }
@@ -77,7 +76,7 @@ int strnspn(const char * s1, const char * s2)
 
 // commonly biggest substring, which consists only of characters that are part of str2.
 // return number of common chars sequence
-int strncstr(const char * s1, const char * s2)
+int strncstr(const char * s1, const char * s2, const int nlimit = 1)
 {
    const char * pch = s2;
    int n = 0;
@@ -102,8 +101,9 @@ int strncstr(const char * s1, const char * s2)
             ++n;
          }
       }
-      if (nmax < n)
+      if (nmax < n && n > nlimit)
       {
+         //printf("substr=%d\n", n);
          nmax = n;
       }
       ++s1;
@@ -151,20 +151,23 @@ std::string strsstr(const char * s1, const char * s2)
    return (nmax > 1) ? std::string(result, nmax) : std::string();
 }
 
-/*
-int i;
-//char strtext[] = "121236dd9033ww903332b903333f";
-//char cset[] = "1234903333e";
+void test()
+{
+   int i = 0;
+   char strtext[] = "121236dd9033ww903332b903333f";
+   char cset[] = "1234903333e";
 
-char strtext[] = "12a39";
-char cset[] = "1023";
+   //char strtext[] = "132a39";
+   //char cset[] = "1023";
 
-i = strncstr(strtext, cset);
-printf("The initial number has %d digits.\n", i);
-std::cout << strsstr(strtext, cset);
-//printf("\nThe initial number has %d digits.\n", i);
-return 0;
-*/
+   i = strncstr(strtext, cset);
+   printf("The number chars of common substring:%d\n", i);
+   std::cout << strsstr(strtext, cset) << std::endl;
+
+   i = strnspn(strtext, cset);
+   printf("The number of common symbols:%d\n", i);
+   return;
+}
 
 int main()
 {
