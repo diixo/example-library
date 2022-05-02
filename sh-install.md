@@ -54,4 +54,7 @@ sudo apt-get install autoconf-archive
 #unicode-libraries
 sudo apt-get install libunistring-dev
 sudo apt-get install -y icu-devtools
+
+#log4cplus
+sudo apt install liblog4cplus-dev
 ```
