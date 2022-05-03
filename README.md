@@ -10,6 +10,7 @@ An example C/C++ library. Uses CMake as build system and
 
 Installation command:
 ```
+cd build
 sudo make install
 ```
 Success output of installation:
