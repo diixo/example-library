@@ -5,9 +5,7 @@ An example C/C++ library. Uses CMake as build system and
 
 ## Build:
 ```
-mkdir build && cd build
-cmake ..
-make
+./script_compile.sh
 ```
 
 Installation command:
