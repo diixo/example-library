@@ -51,6 +51,10 @@ export(TARGETS ${TARGET} FILE "${TARGET}Config.cmake")
 
 # Use a pkg-config module for CMake
 find_package(PkgConfig)
+#find_package(Threads)
+
+SET(CMAKE_EXE_LINKER_FLAGS "-pthread")
+#target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 # Create pkgconfig file
 configure_file(example-library.pc.in example-library.pc @ONLY)
