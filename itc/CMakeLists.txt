@@ -13,7 +13,7 @@ add_executable (test_itc_main
 
 add_executable (test_itc_service 
    "test_service.cpp"
-   "App.cpp"
+   #"App.cpp"
    "EventLoop.cpp"
    "Dispatcher.cpp"
    "Event.cpp"
