@@ -17,7 +17,7 @@ void App::processQueue()
          continue;
       }
 
-      std::unique_ptr<BTEvent> pEvt = m_MsgQueue.popEvent();
+      std::unique_ptr<SEvent> pEvt = m_MsgQueue.popEvent();
 
       if (pEvt == nullptr)
       {
@@ -43,7 +43,7 @@ void App::processQueue()
 
 void App::PushEvent(int eventID, EventPriority priority, std::vector<uint8_t> buffer)
 {
-   std::unique_ptr<BTEvent> pEvt = std::unique_ptr<BTEvent>(new BTEvent());
+   std::unique_ptr<SEvent> pEvt = std::unique_ptr<SEvent>(new SEvent());
    pEvt->evtID = eventID;
    pEvt->payload = std::move(buffer);
    pEvt->priority = priority;
