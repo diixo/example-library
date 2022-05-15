@@ -20,7 +20,7 @@ void MessageQueue::pushFunc(const Function& func)
    m_CV.notify_one();
 }
 
-void MessageQueue::pushEvent(std::unique_ptr<BTEvent> pEvt)
+void MessageQueue::pushEvent(std::unique_ptr<SEvent> pEvt)
 {
    if (!pEvt)
    {
@@ -50,7 +50,7 @@ MessageQueue::Function MessageQueue::popFunc()
    return first;
 }
 
-std::unique_ptr<BTEvent> MessageQueue::popEvent()
+std::unique_ptr<SEvent> MessageQueue::popEvent()
 {
    std::lock_guard<std::mutex> scopeMutex(m_QueueMtx);
 
@@ -58,7 +58,7 @@ std::unique_ptr<BTEvent> MessageQueue::popEvent()
    {
       if (m_EventsQueue[i].size() > 0)
       {
-         std::unique_ptr<BTEvent> first = std::move(m_EventsQueue[i].front());
+         std::unique_ptr<SEvent> first = std::move(m_EventsQueue[i].front());
          m_EventsQueue[i].pop();
          return first;
       }

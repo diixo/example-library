@@ -20,7 +20,7 @@ enum EventPriority
    PRIORITY_SIZE
 };
 
-struct BTEvent
+struct SEvent
 {
    // to be used in case of object pool
    bool bProcessed;
@@ -42,7 +42,7 @@ private:
 
    size_t getSizePriv() const;
 
-   using EventQueue = std::queue<std::unique_ptr<BTEvent>>;
+   using EventQueue = std::queue<std::unique_ptr<SEvent>>;
 
    mutable std::mutex m_QueueMtx;
    mutable std::condition_variable m_CV;
@@ -52,11 +52,11 @@ private:
 public:
    MessageQueue();
 
-   void pushEvent(std::unique_ptr<BTEvent> pEvt);
+   void pushEvent(std::unique_ptr<SEvent> pEvt);
    void pushFunc(const Function& func);
 
    Function popFunc();
-   std::unique_ptr<BTEvent> popEvent();
+   std::unique_ptr<SEvent> popEvent();
 
    void waitForEvents() const;
    size_t getSize() const;

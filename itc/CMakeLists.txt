@@ -7,7 +7,7 @@ add_executable (test_itc_main
    "Dispatcher.cpp"
    "Event.cpp"
    "LogInfo.cpp"
-   "MessageQueue.cpp"
+   #"MessageQueue.cpp"
    "itc.cpp"
 )
 
@@ -18,6 +18,6 @@ add_executable (test_itc_service
    "Dispatcher.cpp"
    "Event.cpp"
    "LogInfo.cpp"
-   "MessageQueue.cpp"
+   #"MessageQueue.cpp"
    "itc.cpp"
 )
