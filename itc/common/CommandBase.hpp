@@ -27,7 +27,7 @@ typedef std::weak_ptr<::itc::ITimer> Watchdog;
 class CommandBase
     : public ICommand
     , public CCommandActionHandlerDefault
-    , //public Debugged
+    //, public Debugged
     , public std::enable_shared_from_this<CommandBase>
 {
 public:
