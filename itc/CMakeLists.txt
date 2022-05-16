@@ -6,7 +6,7 @@ set (SOURCE_ITC
    "Dispatcher.cpp"
    "Event.cpp"
    "LogInfo.cpp"
-   #"MessageQueue.cpp"
+   "MessageQueue.cpp"
    "itc.cpp"
 )
 
@@ -15,12 +15,9 @@ add_executable (test_itc_main
    ${SOURCE_ITC}
 )
 
-add_executable (test_itc_service 
-   "test_service.cpp"
-   #"App.cpp"
+add_executable (test_itc_app 
+   "test-app.cpp"
+   "App.cpp"
    ${SOURCE_ITC}
 )
 
-add_subdirectory(old)
-
-#add_library (lib_tensor_nn STATIC ${SOURCE_TENSOR_NN})
