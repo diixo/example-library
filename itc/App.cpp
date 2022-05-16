@@ -1,5 +1,7 @@
 
 #include "App.hpp"
+#include "DeviceManager.hpp"
+#include "itc.hpp"
 
 void App::processQueue()
 {
@@ -58,5 +60,11 @@ void App::PushFunc(const std::function<void()>& functor)
 
 void App::start()
 {
+   mDeviceManager = std::make_shared<itc::DeviceManager>();
+   
+   itc::createEventLoop(itc::IDeviceManager::threadID);
+
+   //itc::invoke(itc::DM_init::Call(mDeviceManager));
+
    processQueue();
 }

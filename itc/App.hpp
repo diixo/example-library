@@ -1,7 +1,13 @@
 
 #pragma once
 
+#include <memory>
 #include "MessageQueue.hpp"
+
+namespace itc
+{
+   class IDeviceManager;
+}
 
 class App
 {
@@ -10,6 +16,8 @@ private:
    MessageQueue m_MsgQueue;
    std::mutex m_Lock;
    App() {};
+
+   std::shared_ptr<itc::IDeviceManager> mDeviceManager;
 
 public:
    static App& GetInstance()
