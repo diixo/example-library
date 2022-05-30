@@ -14,6 +14,11 @@ add_executable (test_itc_CallStatic
    ${SOURCE_ITC}
 )
 
+add_executable (test_itc_Call
+   "main-Call.cpp"
+   ${SOURCE_ITC}
+)
+
 add_executable (test_itc_App 
    "main-App.cpp"
    "App.cpp"
