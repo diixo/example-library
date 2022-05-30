@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include <string.h>
+#include <string>
+#include <memory>
 
 namespace itc
 {
@@ -26,13 +27,5 @@ public:
 
    void init() override;
 };
-
-std::string itc::IDeviceManager::threadID = "DevMan";
-
-inline
-void DeviceManager::init()
-{
-   // TODO:
-}
 
 } //namespace itc

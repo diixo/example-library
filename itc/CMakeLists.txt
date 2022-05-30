@@ -10,13 +10,14 @@ set (SOURCE_ITC
 )
 
 add_executable (test_itc_main
-   "test_itc.cpp"
+   "test-main.cpp"
    ${SOURCE_ITC}
 )
 
-add_executable (test_itc_app 
+add_executable (test_itc_App 
    "test-app.cpp"
    "App.cpp"
+   "DeviceManager.cpp"
    ${SOURCE_ITC}
 )
 
