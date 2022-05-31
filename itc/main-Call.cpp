@@ -15,6 +15,8 @@ namespace ns_CallDemo
    {
       void func1()
       {
+         // wait a little to synchronize outputs
+         //std::this_thread::sleep_for(std::chrono::milliseconds(5));
          std::cout << itc::currentThreadName() << ": " << "func1()" << std::endl;
       }
 
