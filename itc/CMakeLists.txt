@@ -15,7 +15,7 @@ add_executable (test_itc_EventDemo
 )
 
 add_executable (test_itc_CallDemo
-   "main-Call.cpp"
+   "main-CallDemo.cpp"
    ${SOURCE_ITC}
 )
 

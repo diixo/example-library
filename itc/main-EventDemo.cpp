@@ -64,16 +64,8 @@ int main()
 
    itc::invoke(STATIC_CALL_ED_start::CallStatic());
 
-   while (!itc::_private::Dispatcher::getInstance().isEmpty())
-   {
-      auto event = itc::_private::Dispatcher::getInstance().getThreadByName(thread_name1);
-
-      // waiting while all events finish responses by calling from parallel thread.
-      if (event && (event->size() == 0))
-      {
-         break;
-      }
-   }
+   // wait current thread with blocking.
+   itc::waitEventLoop(thread_name1);
 
    itc::logInfo() << "return to main_tid << " << std::this_thread::get_id();
 
