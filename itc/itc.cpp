@@ -57,4 +57,18 @@ const std::string& currentThreadName()
     return eventLoop ? eventLoop->getThreadName() : UNKNOWN_THREAD_NAME;
 }
 
+void waitEventLoop(const std::string& thread_name)
+{
+   while (!itc::_private::Dispatcher::getInstance().isEmpty())
+   {
+      auto eventLoop = itc::_private::Dispatcher::getInstance().getThreadByName(thread_name);
+
+      // waiting while all events finish responses by calling from parallel thread.
+      if (eventLoop && (eventLoop->size() == 0))
+      {
+         break;
+      }
+   }
+}
+
 }

@@ -222,4 +222,7 @@ bool invoke(const itc::_private::CallBinder& callBinder);
 // Returns name of current thread
 const std::string& currentThreadName();
 
+// run while eventLoop is not empty. Blocked current thread.
+void waitEventLoop(const std::string& thread_name);
+
 } // namespace itc

@@ -9,12 +9,12 @@ set (SOURCE_ITC
    "itc.cpp"
 )
 
-add_executable (test_itc_CallStatic
-   "main-CallStatic.cpp"
+add_executable (test_itc_EventDemo
+   "main-EventDemo.cpp"
    ${SOURCE_ITC}
 )
 
-add_executable (test_itc_Call
+add_executable (test_itc_CallDemo
    "main-Call.cpp"
    ${SOURCE_ITC}
 )

@@ -79,16 +79,8 @@ int main()
 
    //////////////////////////////////////////////////////////////////////////////////////////
 
-   while (!itc::_private::Dispatcher::getInstance().isEmpty())
-   {
-      auto event = itc::_private::Dispatcher::getInstance().getThreadByName(ns_CallDemo::THREAD);
-
-      // waiting while all events finish responses by calling from parallel thread.
-      if (event && (event->size() == 0))
-      {
-         break;
-      }
-   }
+   // wait current thread with blocking.
+   itc::waitEventLoop(ns_CallDemo::THREAD);
 
    itc::logInfo() << "return to main_tid << " << std::this_thread::get_id();
 
