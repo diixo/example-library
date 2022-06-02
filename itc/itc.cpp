@@ -66,6 +66,7 @@ void waitEventLoop(const std::string& thread_name)
       // waiting while all events finish responses by calling from parallel thread.
       if (eventLoop && (eventLoop->size() == 0))
       {
+         eventLoop->stop();
          break;
       }
    }

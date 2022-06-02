@@ -43,11 +43,12 @@ DECLARE_EVENT(EVENT_func2, EventConsumer, func2, int)
 DECLARE_EVENT(EVENT_func3, EventConsumer, func3, std::string, int, float)
 DECLARE_EVENT(EVENT_func4, EventConsumer, func4, std::shared_ptr<A>)
 
-// fill events list to call consumer-methods from another thread 
+// fill events-list to call consumer-methods from another thread 
 void startEventDemo()
 {
    auto consumer = std::make_shared<EventConsumer>();
 
+   // append new events from thread_name1, which is current-thread for each event.
    itc::invoke(EVENT_func1::Event(consumer));
    itc::invoke(EVENT_func2::Event(consumer, 5));
    itc::invoke(EVENT_func3::Event(consumer, "HELLO", 42, 5.5f));
