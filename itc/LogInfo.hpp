@@ -33,8 +33,8 @@ std::ostream& operator<<(std::ostream& os, LogPrefix prefix)
    return os << prefix.getPrefix();
 }
 
-namespace itc {
-
+namespace itc
+{
    enum class eTraceMessageLevel : uint8_t
    {
       logKPI,
@@ -93,13 +93,9 @@ std::unique_ptr<TraceStream> operator<<(itc::eTraceMessageLevel level, const Val
    return std::move(ts);
 }
 
-//template <>
-//std::unique_ptr<TraceStream> operator<<(itc::eTraceMessageLevel level, const LogPrefix& pref);
-
 template <> inline
 std::unique_ptr<TraceStream> operator<<(itc::eTraceMessageLevel level, const LogPrefix& pref)
 {
    std::unique_ptr<TraceStream> b(new TraceStream(std::string("")/*TraceManager::getInstance().getCurrentThreadName()*/, pref.getPrefix(), level));
    return std::move(b);
 }
-

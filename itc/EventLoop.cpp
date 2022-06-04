@@ -51,23 +51,23 @@ std::thread::id EventLoop::getCurrentThreadId()
 
 void EventLoop::push(std::shared_ptr<ICallable> call)
 {
-    if (LOG_ENABLE)
-        itc::logInfo() << getThreadName() << " EventLoop::push" << " tid=" << std::this_thread::get_id();
+   if (LOG_ENABLE)
+      itc::logInfo() << getThreadName() << " EventLoop::push" << " tid=" << std::this_thread::get_id();
 
-    std::unique_lock <std::mutex> lock(mMutex);
-    if (!mbStop)
-    {
-        mEvents.push(std::make_shared<Event>(call));
-        mCV.notify_one();
-        ++mSize;
-    }
+   std::unique_lock <std::mutex> lock(mMutex);
+   if (!mbStop)
+   {
+      mEvents.push(std::make_shared<Event>(call));
+      mCV.notify_one();
+      ++mSize;
+   }
 }
 
 
 void EventLoop::stop()
 {
 #ifdef SYS_gettid
-    itc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ", " << syscall(SYS_gettid) << ")";
+   itc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ", " << syscall(SYS_gettid) << ")";
 #else
    if (LOG_ENABLE)
       itc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ")";
@@ -86,68 +86,67 @@ void EventLoop::stop()
 
    mThread.join();
 
-    if (LOG_ENABLE)
-        itc::logInfo() << getThreadName() << " EventLoop::stopThread exit";
+   if (LOG_ENABLE)
+      itc::logInfo() << getThreadName() << " EventLoop::stopThread exit";
 }
 
 void EventLoop::run()
 {
 #ifdef SYS_gettid
-    itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id() << ", " << syscall(SYS_gettid) << ")";
+   itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id() << ", " << syscall(SYS_gettid) << ")";
 #else
    if (LOG_ENABLE)
       itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id();
 #endif
 
-    while (!mbStop)
-    {
-        if (LOG_ENABLE)
-            itc::logInfo() << getThreadName() << " loop... sz=" << mEvents.size();
+   while (!mbStop)
+   {
+      if (LOG_ENABLE)
+         itc::logInfo() << getThreadName() << " loop... sz=" << mEvents.size();
 
-        std::shared_ptr<Event> event = nullptr;
-        {
-            // std::contidion_variable::wait_for with max period not wait, so will use just some big period value for wait if no timers
-            auto timeToNextTimer = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::duration::max());
-            //auto timeToNextTimer = std::chrono::milliseconds(1000000);
+      std::shared_ptr<Event> event = nullptr;
+      {
+         // std::contidion_variable::wait_for with max period not wait, so will use just some big period value for wait if no timers
+         //auto timeToNextTimer = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::duration::max());
 
-            std::unique_lock<std::mutex> lock(mMutex);
+         std::unique_lock<std::mutex> lock(mMutex);
 
-            if (event == nullptr)
+         if (event == nullptr)
+         {
+            if (mEvents.empty() && !mbStop)
             {
-                if (mEvents.empty() && !mbStop)
-                {
-                    if (LOG_ENABLE)
-                        itc::logInfo() << getThreadName() << " >> wait_for. sz=" << mEvents.size() << " mSize=" << (size_t)mSize;
+               if (LOG_ENABLE)
+                  itc::logInfo() << getThreadName() << " >> wait_for. sz=" << mEvents.size() << " mSize=" << (size_t)mSize;
 
-                    //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
-                    mCV.wait(lock, [this]() { return (!mEvents.empty() || mbStop); });
+               //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
+               mCV.wait(lock, [this]() { return (!mEvents.empty() || mbStop); });
 
-                    if (LOG_ENABLE)
-                        itc::logInfo() << getThreadName() << " << wait_for. sz=" << mEvents.size();
-                }
-
-                if (mEvents.empty())
-                    continue;
-
-                if (LOG_ENABLE)
-                   itc::logInfo() << getThreadName() << " event-handling. sz=" << mEvents.size();
-
-                event = mEvents.front();
-                mEvents.pop();
+               if (LOG_ENABLE)
+                  itc::logInfo() << getThreadName() << " << wait_for. sz=" << mEvents.size();
             }
-        }
 
-        if (LOG_ENABLE)
-            itc::logInfo() << getThreadName() << " got event->call. sz=" << mEvents.size();
+            if (mEvents.empty())
+               continue;
 
-        std::shared_ptr<ICallable> callable = event->getCallable();
-        callable->call();
+            if (LOG_ENABLE)
+               itc::logInfo() << getThreadName() << " event-handling. sz=" << mEvents.size();
 
-        {
-           std::unique_lock<std::mutex> lock(mMutex);
-           --mSize;
-        }
-    }
+            event = mEvents.front();
+            mEvents.pop();
+         }
+      }
+
+      if (LOG_ENABLE)
+         itc::logInfo() << getThreadName() << " got event->call. sz=" << mEvents.size();
+
+      std::shared_ptr<ICallable> callable = event->getCallable();
+      callable->call();
+
+      {
+         std::unique_lock<std::mutex> lock(mMutex);
+         --mSize;
+      }
+   }
 
    if (LOG_ENABLE)
       itc::logInfo() << "Exit event-loop: " << mThreadName;
