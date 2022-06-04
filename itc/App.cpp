@@ -68,3 +68,41 @@ void App::start()
 
    processQueue();
 }
+
+//////////////////////////////////////////////////////////////////////////
+/*
+TraceManager& TraceManager::getInstance()
+{
+   static TraceManager sTraceManager;
+   return sTraceManager;
+}
+
+bool TraceManager::trace(const std::string& threadId, itc::eTraceMessageLevel level, const std::string& prefix, const std::string& message)
+{
+   {
+      boost::shared_lock<boost::shared_mutex> gl(mClientsMutex);
+      for (auto& strategy : mClients[threadId])
+      {
+         strategy->trace(level, prefix, message);
+      }
+   }
+
+   {
+      boost::shared_lock<boost::shared_mutex> gl(mGlobalStrategiesMutex);
+      for (auto& strategy : mGlobalStrategies)
+      {
+         strategy->trace(level, prefix, message);
+      }
+   }
+}
+*/
+
+void App::trace(const std::string& threadId, itc::eTraceMessageLevel level, const std::string& prefix, const std::string& message)
+{
+   {
+      std::shared_lock<std::shared_mutex> gl(mGlobalLoggingMutex);
+      std::ostringstream outstream;
+      outstream << /*threadId << "::" << */ prefix << message << std::endl;
+      std::cout << outstream.str();
+   }
+}

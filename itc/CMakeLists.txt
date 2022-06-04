@@ -1,12 +1,14 @@
 
 
 set (SOURCE_ITC 
+   "App.cpp"
    "EventLoop.cpp"
    "Dispatcher.cpp"
    "Event.cpp"
    "LogInfo.cpp"
    "MessageQueue.cpp"
    "itc.cpp"
+   "DeviceManager.cpp"
 )
 
 add_executable (test_itc_EventDemo
@@ -21,8 +23,6 @@ add_executable (test_itc_CallDemo
 
 add_executable (test_itc_App 
    "main-App.cpp"
-   "App.cpp"
-   "DeviceManager.cpp"
    ${SOURCE_ITC}
 )
 

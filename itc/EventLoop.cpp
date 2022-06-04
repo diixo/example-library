@@ -128,7 +128,7 @@ void EventLoop::run()
                     continue;
 
                 if (LOG_ENABLE)
-                   itc::logInfo() << getThreadName() << " event handling";
+                   itc::logInfo() << getThreadName() << " event-handling. sz=" << mEvents.size();
 
                 event = mEvents.front();
                 mEvents.pop();
@@ -136,7 +136,7 @@ void EventLoop::run()
         }
 
         if (LOG_ENABLE)
-            itc::logInfo() << getThreadName() << " got event and call. mEvents.size: " << mEvents.size();
+            itc::logInfo() << getThreadName() << " got event and call. sz=" << mEvents.size();
 
         std::shared_ptr<ICallable> callable = event->getCallable();
         callable->call();
@@ -148,7 +148,7 @@ void EventLoop::run()
     }
 
    if (LOG_ENABLE)
-      itc::logInfo() << "Exit event loop " << mThreadName;
+      itc::logInfo() << "Exit event-loop: " << mThreadName;
 }
 
 } // namespace _private
