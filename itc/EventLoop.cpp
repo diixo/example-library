@@ -8,7 +8,7 @@
 #include "Event.hpp"
 
 
-static const bool LOG_ENABLE = true;
+const bool LOG_ENABLE = false;
 
 namespace itc {
 namespace _private {
@@ -62,7 +62,8 @@ void EventLoop::stop()
 #ifdef SYS_gettid
     itc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ", " << syscall(SYS_gettid) << ")";
 #else
-    itc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ")";
+   if (LOG_ENABLE)
+      itc::logInfo() << "EventLoop::stop(). " << mThreadName << "(" << getThreadId() << ")";
 #endif
    {
       std::unique_lock <std::mutex> lock(mMutex);
@@ -87,7 +88,8 @@ void EventLoop::run()
 #ifdef SYS_gettid
     itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id() << ", " << syscall(SYS_gettid) << ")";
 #else
-    itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id();
+   if (LOG_ENABLE)
+      itc::logInfo() << "EventLoop::run() " << mThreadName << " tid=" << std::this_thread::get_id();
 #endif
 
     while (!mbStop)
@@ -109,8 +111,10 @@ void EventLoop::run()
                 {
                     if (LOG_ENABLE)
                         itc::logInfo() << getThreadName() << " wait_for sz=" << mEvents.size();
+
                     //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
                     mCV.wait(lock, [this]() { return (!mEvents.empty()); } );
+
                     if (LOG_ENABLE)
                         itc::logInfo() << getThreadName() << " exit wait_for sz=" << mEvents.size();
                 }
@@ -128,6 +132,7 @@ void EventLoop::run()
 
         if (LOG_ENABLE)
             itc::logInfo() << getThreadName() << " got event and call. mEvents.size: " << mEvents.size();
+
         std::shared_ptr<ICallable> callable = event->getCallable();
         callable->call();
 
@@ -137,7 +142,8 @@ void EventLoop::run()
         }
     }
 
-    itc::logInfo() << "Exit event loop " << mThreadName;
+   if (LOG_ENABLE)
+      itc::logInfo() << "Exit event loop " << mThreadName;
 }
 
 } // namespace _private
