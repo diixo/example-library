@@ -8,7 +8,7 @@
 #include "Event.hpp"
 
 
-const bool LOG_ENABLE = false;
+const bool LOG_ENABLE = true;
 
 namespace itc {
 namespace _private {
@@ -25,6 +25,11 @@ EventLoop::EventLoop(const std::string& threadName)
 {
    mThread = std::thread(&EventLoop::run, this);
    mThreadId = mThread.get_id();    
+}
+
+EventLoop::~EventLoop()
+{
+   stop();
 }
 
 std::thread::id EventLoop::getThreadId() const
@@ -110,10 +115,10 @@ void EventLoop::run()
                 if (mEvents.empty() && !mbStop)
                 {
                     if (LOG_ENABLE)
-                        itc::logInfo() << getThreadName() << " wait_for sz=" << mEvents.size();
+                        itc::logInfo() << getThreadName() << " wait_for sz=" << mEvents.size() << " mSize=" << (size_t)mSize;
 
                     //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
-                    mCV.wait(lock, [this]() { return (!mEvents.empty()); } );
+                    mCV.wait(lock, [this]() { return (!mEvents.empty() || mbStop); });
 
                     if (LOG_ENABLE)
                         itc::logInfo() << getThreadName() << " exit wait_for sz=" << mEvents.size();

@@ -22,7 +22,7 @@ class EventLoop
 public:
 
    explicit EventLoop(const std::string& threadName);
-   ~EventLoop() = default;
+   ~EventLoop();
    EventLoop(const EventLoop&) = delete;
    EventLoop& operator=(const EventLoop&) = delete;
 
