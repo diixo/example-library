@@ -29,6 +29,8 @@ EventLoop::EventLoop(const std::string& threadName)
 
 EventLoop::~EventLoop()
 {
+   if (LOG_ENABLE)
+      itc::logInfo() << "::~EventLoop=" << getThreadName() << " tid=" << std::this_thread::get_id();
    stop();
 }
 
@@ -115,13 +117,13 @@ void EventLoop::run()
                 if (mEvents.empty() && !mbStop)
                 {
                     if (LOG_ENABLE)
-                        itc::logInfo() << getThreadName() << " wait_for sz=" << mEvents.size() << " mSize=" << (size_t)mSize;
+                        itc::logInfo() << getThreadName() << " >> wait_for. sz=" << mEvents.size() << " mSize=" << (size_t)mSize;
 
                     //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
                     mCV.wait(lock, [this]() { return (!mEvents.empty() || mbStop); });
 
                     if (LOG_ENABLE)
-                        itc::logInfo() << getThreadName() << " exit wait_for sz=" << mEvents.size();
+                        itc::logInfo() << getThreadName() << " << wait_for. sz=" << mEvents.size();
                 }
 
                 if (mEvents.empty())
@@ -136,7 +138,7 @@ void EventLoop::run()
         }
 
         if (LOG_ENABLE)
-            itc::logInfo() << getThreadName() << " got event and call. sz=" << mEvents.size();
+            itc::logInfo() << getThreadName() << " got event->call. sz=" << mEvents.size();
 
         std::shared_ptr<ICallable> callable = event->getCallable();
         callable->call();
