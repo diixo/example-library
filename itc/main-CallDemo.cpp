@@ -15,8 +15,6 @@ namespace ns_CallDemo
    {
       void func1()
       {
-         // wait a little to synchronize outputs
-         //std::this_thread::sleep_for(std::chrono::milliseconds(5));
          std::cout << itc::currentThreadName() << ": " << "func1()" << std::endl;
       }
 
@@ -30,9 +28,13 @@ namespace ns_CallDemo
          std::cout << itc::currentThreadName() << ": " << "func3(" << s << ", " << i << ", " << f << ")" << std::endl;
       }
 
-      void func4(std::shared_ptr<ns_CallDemo::A> pA);
+      void func4(std::shared_ptr<ns_CallDemo::A> pA)
+      {
+         std::cout << itc::currentThreadName() << ": " << "func4(" << pA << ")" << std::endl;
+      }
 
-      void vf(int i) override {
+      void vf(int i) override
+      {
          std::cout << itc::currentThreadName() << ": " << "vf(" << i << ")" << std::endl;
       }
 
@@ -44,11 +46,6 @@ namespace ns_CallDemo
    std::ostream& operator<<(std::ostream &o, std::shared_ptr<A> a)
    {
       return o << "{i=" << a->mI << ", s=" << a->mS << "}";
-   }
-
-   void A::func4(std::shared_ptr<ns_CallDemo::A> pA)
-   {
-      std::cout << itc::currentThreadName() << ": " << "func4(" << pA << ")" << std::endl;
    }
 }
 
