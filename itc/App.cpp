@@ -7,7 +7,11 @@ void App::processQueue()
 {
    while (true)
    {
+      itc::logInfo() << "App::processQueue >> wait...";
+
       m_MsgQueue.waitForEvents();
+
+      itc::logInfo() << "App::processQueue.wait >> started";
 
       std::lock_guard<std::mutex> lock(m_Lock);
 
@@ -31,7 +35,6 @@ void App::processQueue()
          // quit main loop
          break;
       }
-      // A2DPstart
       else if ((CMD_CONNECT <= pEvt->evtID) && (pEvt->evtID < CMD_MAX))
       {
          //mConnService->receiveEvent();
@@ -40,7 +43,9 @@ void App::processQueue()
       {
          //DLT_LOG();
       }
+      itc::logInfo() << "App::processQueue <<";
    }
+   itc::logInfo() << "App::processQueue.exit";
 }
 
 void App::PushEvent(int eventID, EventPriority priority, std::vector<uint8_t> buffer)
