@@ -116,7 +116,7 @@ void EventLoop::run()
             if (mEvents.empty() && !mbStop)
             {
                if (LOG_ENABLE)
-                  itc::logInfo() << getThreadName() << " >> wait_for. sz=" << mEvents.size() << " mSize=" << (size_t)mSize;
+                  itc::logInfo() << getThreadName() << " >> wait_for. sz=" << mEvents.size() << " mStop="<< (int)mbStop;
 
                //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
                mCV.wait(lock, [this]() { return (!mEvents.empty() || mbStop); });

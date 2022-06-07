@@ -27,6 +27,7 @@ private:
    std::mutex m_Lock;
    std::shared_mutex mGlobalLoggingMutex;
    App() {};
+   ~App();
 
    std::shared_ptr<itc::IDeviceManager> mDeviceManager;
 

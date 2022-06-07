@@ -36,3 +36,7 @@ add_executable (test_itc_App
    ${SOURCE_ITC}
 )
 
+add_executable (test_itc_AppCmdEventDemo
+   "main-AppCmdEventDemo.cpp"
+   ${SOURCE_ITC}
+)

@@ -47,7 +47,7 @@ void App::processQueue()
       }
       itc::logInfo() << "App::processQueue <<";
    }
-   itc::logInfo() << "App::processQueue.exit";
+   itc::logInfo() << "App::processQueue.exit <<";
 }
 
 void App::PushEvent(int eventID, EventPriority priority, std::vector<uint8_t> buffer)
@@ -164,4 +164,9 @@ void App::waitEventLoop(const std::string& thread_name)
          break;
       }
    }
+}
+
+App::~App()
+{
+   itc::logInfo() << "App::~App";
 }
