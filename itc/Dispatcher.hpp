@@ -7,6 +7,8 @@
 #include <string>
 #include <thread>
 
+class App;
+
 namespace itc {
 namespace _private {
 
@@ -15,11 +17,6 @@ class EventLoop;
 class Dispatcher
 {
 public:
-   static Dispatcher& getInstance()
-   {
-      static Dispatcher instance;
-      return instance;
-   }
 
    void registerEventLoop(std::shared_ptr<EventLoop> eventLoop);
    void unregisterEventLoop(const std::string& name);
@@ -33,6 +30,7 @@ public:
 
 private:
 
+   friend class App;
    Dispatcher();
    static std::recursive_mutex gMutex;
    std::map<std::thread::id, std::shared_ptr<EventLoop>> mThreads;

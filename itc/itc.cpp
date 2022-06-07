@@ -1,5 +1,6 @@
 
 #include "itc.hpp"
+#include "App.hpp"
 
 
 namespace itc
@@ -11,7 +12,7 @@ bool invoke(const std::string& threadName, std::shared_ptr<_private::ICallable> 
 {
     bool result = false;
 
-    std::shared_ptr<_private::EventLoop> thread = _private::Dispatcher::getInstance().getThreadByName(threadName);
+    std::shared_ptr<_private::EventLoop> thread = App::GetInstance().Dispatcher().getThreadByName(threadName);
 
     if (thread == nullptr)
     {
@@ -28,13 +29,13 @@ bool invoke(const std::string& threadName, std::shared_ptr<_private::ICallable> 
 void createEventLoop(const std::string& threadName)
 {
    std::shared_ptr<_private::EventLoop> eventLoop = std::make_shared<_private::EventLoop>(threadName);
-   _private::Dispatcher::getInstance().registerEventLoop(eventLoop);
+   App::GetInstance().Dispatcher().registerEventLoop(eventLoop);
 }
 
 void stopEventLoop(const std::string& threadName)
 {
     //itc::logInfo("itc::stopEventLoop", threadName);
-    auto eventLoop = _private::Dispatcher::getInstance().getThreadByName(threadName);
+    auto eventLoop = App::GetInstance().Dispatcher().getThreadByName(threadName);
     if (eventLoop == nullptr)
     {
         itc::logInfo() << "itc::stopEventLoop. unknow threadName: " << threadName;
@@ -42,7 +43,7 @@ void stopEventLoop(const std::string& threadName)
     else
     {
         eventLoop->stop();
-        _private::Dispatcher::getInstance().unregisterEventLoop(threadName);
+        App::GetInstance().Dispatcher().unregisterEventLoop(threadName);
     }
 }
 
@@ -53,15 +54,15 @@ bool invoke(const itc::_private::CallBinder& callBinder)
 
 const std::string& currentThreadName()
 {
-    std::shared_ptr<_private::EventLoop> eventLoop = _private::Dispatcher::getInstance().getThreadById(std::this_thread::get_id());
+    std::shared_ptr<_private::EventLoop> eventLoop = App::GetInstance().Dispatcher().getThreadById(std::this_thread::get_id());
     return eventLoop ? eventLoop->getThreadName() : UNKNOWN_THREAD_NAME;
 }
 
 void waitEventLoop(const std::string& thread_name)
 {
-   while (!itc::_private::Dispatcher::getInstance().isEmpty())
+   while (!App::GetInstance().Dispatcher().isEmpty())
    {
-      auto eventLoop = itc::_private::Dispatcher::getInstance().getThreadByName(thread_name);
+      auto eventLoop = App::GetInstance().Dispatcher().getThreadByName(thread_name);
 
       // waiting while all events finish responses by calling from parallel thread.
       if (eventLoop && (eventLoop->size() == 0))

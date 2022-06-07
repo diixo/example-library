@@ -122,8 +122,7 @@ bool App::invoke(const std::string& threadName, std::shared_ptr<itc::_private::I
 {
    bool result = false;
 
-   std::shared_ptr<itc::_private::EventLoop> thread = 
-      itc::_private::Dispatcher::getInstance().getThreadByName(itc::IDeviceManager::threadID);
+   std::shared_ptr<itc::_private::EventLoop> thread = mDispatcher.getThreadByName(itc::IDeviceManager::threadID);
 
    if (thread == nullptr)
    {

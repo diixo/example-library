@@ -5,6 +5,7 @@
 #include <shared_mutex>
 #include "MessageQueue.hpp"
 #include "LogInfo.hpp"
+#include "Dispatcher.hpp"
 
 namespace itc
 {
@@ -29,11 +30,19 @@ private:
 
    std::shared_ptr<itc::IDeviceManager> mDeviceManager;
 
+   itc::_private::Dispatcher mDispatcher;
+
 public:
+
    static App& GetInstance()
    {
       static App instance;
       return instance;
+   }
+
+   itc::_private::Dispatcher& Dispatcher()
+   {
+      return mDispatcher;
    }
 
    enum EEvents
