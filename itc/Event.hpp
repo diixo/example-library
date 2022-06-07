@@ -25,6 +25,12 @@ class Event
 {
 public:
 
+   Event(Event&& event) 
+      : mType(event.mType)
+      , mPriority(event.mPriority)
+      , mpCallable(std::move(event.mpCallable)) 
+   {}
+
    explicit Event(std::shared_ptr<ICallable> callable);
    Event(EventType type, EventPriority priority, std::shared_ptr<ICallable> callable);
    ~Event() = default;

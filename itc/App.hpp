@@ -9,6 +9,13 @@
 namespace itc
 {
    class IDeviceManager;
+
+   namespace _private
+   {
+      class Event;
+      class ICallable;
+      class CallBinder;
+   }
 }
 
 class App
@@ -43,6 +50,10 @@ public:
    static void PushFunc(const std::function<void()>& functor);
 
    void trace(const std::string& threadId, itc::eTraceMessageLevel level, const std::string& prefix, const std::string& message);
+
+   bool invoke(const std::string& threadName, std::shared_ptr<itc::_private::ICallable> call);
+
+   bool invoke(const itc::_private::CallBinder& callBinder);
 
 private:
    void processQueue();

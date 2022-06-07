@@ -2,6 +2,7 @@
 #include "App.hpp"
 #include "DeviceManager.hpp"
 #include "itc.hpp"
+#include "Event.hpp"
 
 void App::processQueue()
 {
@@ -111,3 +112,35 @@ void App::trace(const std::string& threadId, itc::eTraceMessageLevel level, cons
       std::cout << outstream.str();
    }
 }
+
+bool App::invoke(const itc::_private::CallBinder& callBinder)
+{
+   return invoke(callBinder.getThreadName(), callBinder.getCallable());
+}
+
+bool App::invoke(const std::string& threadName, std::shared_ptr<itc::_private::ICallable> call)
+{
+   bool result = false;
+
+   std::shared_ptr<itc::_private::EventLoop> thread = 
+      itc::_private::Dispatcher::getInstance().getThreadByName(itc::IDeviceManager::threadID);
+
+   if (thread == nullptr)
+   {
+      itc::logInfo() << "itc::invoke. unknow threadName: "/* << threadName*/;
+   }
+   else
+   {
+      thread->push(call);
+      result = true;
+   }
+   return result;
+}
+/*
+bool App::invoke(std::unique_ptr<itc::_private::Event>&& event)
+{
+   std::list<std::unique_ptr<itc::_private::Event>> mList;
+   mList.push_back(std::move(event));
+   return true;
+}
+*/
