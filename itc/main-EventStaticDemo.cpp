@@ -1,5 +1,6 @@
 
 #include "itc.hpp"
+#include "App.hpp"
 
 namespace ns_EventStaticDemo
 {
@@ -66,12 +67,12 @@ int main()
 {
    itc::logInfo() << "main_tid:" << std::this_thread::get_id();
 
-   itc::createEventLoop(ns_EventStaticDemo::THREAD);
+   App::createEventLoop(ns_EventStaticDemo::THREAD);
 
-   itc::invoke(STATIC_CALL_ED_start::CallStatic());
+   App::invoke(STATIC_CALL_ED_start::CallStatic());
 
    // wait current thread with blocking.
-   itc::waitEventLoop(ns_EventStaticDemo::THREAD);
+   App::waitEventLoop(ns_EventStaticDemo::THREAD);
 
    itc::logInfo() << "return to main_tid << " << std::this_thread::get_id();
 

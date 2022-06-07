@@ -1,4 +1,5 @@
 
+#include <memory>
 #include "App.hpp"
 #include "DeviceManager.hpp"
 #include "itc.hpp"
@@ -68,7 +69,7 @@ void App::start()
 {
    mDeviceManager = std::make_shared<itc::DeviceManager>();
    
-   itc::createEventLoop(itc::IDeviceManager::threadID);
+   App::createEventLoop(itc::IDeviceManager::threadID);
 
    //itc::invoke(itc::DM_init::Call(mDeviceManager));
 
@@ -115,14 +116,14 @@ void App::trace(const std::string& threadId, itc::eTraceMessageLevel level, cons
 
 bool App::invoke(const itc::_private::CallBinder& callBinder)
 {
-   return invoke(callBinder.getThreadName(), callBinder.getCallable());
+   return App::invoke(callBinder.getThreadName(), callBinder.getCallable());
 }
 
 bool App::invoke(const std::string& threadName, std::shared_ptr<itc::_private::ICallable> call)
 {
    bool result = false;
 
-   std::shared_ptr<itc::_private::EventLoop> thread = mDispatcher.getThreadByName(itc::IDeviceManager::threadID);
+   std::shared_ptr<itc::_private::EventLoop> thread = App::GetInstance().Dispatcher().getThreadByName(threadName);
 
    if (thread == nullptr)
    {
@@ -135,6 +136,7 @@ bool App::invoke(const std::string& threadName, std::shared_ptr<itc::_private::I
    }
    return result;
 }
+
 /*
 bool App::invoke(std::unique_ptr<itc::_private::Event>&& event)
 {
@@ -143,3 +145,23 @@ bool App::invoke(std::unique_ptr<itc::_private::Event>&& event)
    return true;
 }
 */
+
+void App::createEventLoop(const std::string& threadName)
+{
+   std::shared_ptr<itc::_private::EventLoop> eventLoop = std::make_shared<itc::_private::EventLoop>(threadName);
+   App::GetInstance().Dispatcher().registerEventLoop(eventLoop);
+}
+
+void App::waitEventLoop(const std::string& thread_name)
+{
+   while (!App::GetInstance().Dispatcher().isEmpty())
+   {
+      auto eventLoop = App::GetInstance().Dispatcher().getThreadByName(thread_name);
+
+      // waiting while all events finish responses by calling from parallel thread.
+      if (eventLoop && (eventLoop->size() == 0))
+      {
+         break;
+      }
+   }
+}

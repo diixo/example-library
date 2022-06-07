@@ -208,21 +208,10 @@ namespace itc {
 
 extern const std::string UNKNOWN_THREAD_NAME;
 
-// Create thread and register in Dispatcher, threadName should be UNIQE for all application
-void createEventLoop(const std::string& threadName);
-
 // Stop event loop
 void stopEventLoop(const std::string& threadName);
 
-// Invoke ICallable object on binded thread.
-// * callBinder - binder ICallable object types to thread should be declared using one of macro:
-// DECLARE_STATIC_CALL, DECLARE_CALL, DECLARE_EVENT, DECLARE_REQUEST
-bool invoke(const itc::_private::CallBinder& callBinder);
-
 // Returns name of current thread
 const std::string& currentThreadName();
-
-// run while eventLoop is not empty. Blocked current thread.
-void waitEventLoop(const std::string& thread_name);
 
 } // namespace itc

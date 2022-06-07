@@ -60,9 +60,18 @@ public:
 
    void trace(const std::string& threadId, itc::eTraceMessageLevel level, const std::string& prefix, const std::string& message);
 
-   bool invoke(const std::string& threadName, std::shared_ptr<itc::_private::ICallable> call);
+   static bool invoke(const std::string& threadName, std::shared_ptr<itc::_private::ICallable> call);
 
-   bool invoke(const itc::_private::CallBinder& callBinder);
+   // Create thread and register in Dispatcher, threadName should be UNIQE for all application
+   static void createEventLoop(const std::string& threadName);
+
+   // Invoke ICallable object on binded thread.
+   // * callBinder - binder ICallable object types to thread should be declared using one of macro:
+   // DECLARE_STATIC_CALL, DECLARE_CALL, DECLARE_EVENT, DECLARE_REQUEST
+   static bool invoke(const itc::_private::CallBinder& callBinder);
+
+   // run while eventLoop is not empty. Blocked current thread.
+   static void waitEventLoop(const std::string& thread_name);
 
 private:
    void processQueue();

@@ -1,6 +1,6 @@
 
 #include "itc.hpp"
-#include <memory>
+#include "App.hpp"
 
 namespace ns_CallDemo
 {
@@ -63,21 +63,21 @@ int main()
 
    //TraceManager::getInstance().registerStrategy("_UNKNOWN_", std::make_shared<DLTTraceStrategy>("DEMO", "Demo"));
 
-   itc::createEventLoop(ns_CallDemo::THREAD);
+   App::createEventLoop(ns_CallDemo::THREAD);
 
    auto a = std::make_shared<ns_CallDemo::A>(123, "HELLO A");
 
-   itc::invoke(CALL_func1::Call(a));
-   itc::invoke(CALL_func2::Call(a, 42));
-   itc::invoke(CALL_func3::Call(a, "Demo", 5, 3.14f));
-   itc::invoke(CALL_func4::Call(a, a));
+   App::invoke(CALL_func1::Call(a));
+   App::invoke(CALL_func2::Call(a, 42));
+   App::invoke(CALL_func3::Call(a, "Demo", 5, 3.14f));
+   App::invoke(CALL_func4::Call(a, a));
 
-   itc::invoke(CALL_funcV::Call(a, 456));
+   App::invoke(CALL_funcV::Call(a, 456));
 
    //////////////////////////////////////////////////////////////////////////////////////////
 
    // wait current thread with blocking.
-   itc::waitEventLoop(ns_CallDemo::THREAD);
+   App::waitEventLoop(ns_CallDemo::THREAD);
 
    itc::logInfo() << "return to main_tid << " << std::this_thread::get_id();
 

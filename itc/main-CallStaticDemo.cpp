@@ -1,6 +1,6 @@
 
 #include "itc.hpp"
-#include <memory>
+#include "App.hpp"
 
 namespace ns_CallStaticDemo
 {
@@ -52,14 +52,14 @@ int main()
 {
    itc::logInfo() << "main_tid:" << std::this_thread::get_id();
 
-   itc::createEventLoop(ns_CallStaticDemo::THREAD);
+   App::createEventLoop(ns_CallStaticDemo::THREAD);
 
-   itc::invoke(STATIC_CALL_func1::CallStatic());
-   itc::invoke(STATIC_CALL_func2::CallStatic(5));
-   itc::invoke(STATIC_CALL_func3::CallStatic("HELLO", 42, 5.5f));
-   itc::invoke(STATIC_CALL_func4::CallStatic(std::make_shared<ns_CallStaticDemo::A>(33, "Hello A")));
+   App::invoke(STATIC_CALL_func1::CallStatic());
+   App::invoke(STATIC_CALL_func2::CallStatic(5));
+   App::invoke(STATIC_CALL_func3::CallStatic("HELLO", 42, 5.5f));
+   App::invoke(STATIC_CALL_func4::CallStatic(std::make_shared<ns_CallStaticDemo::A>(33, "Hello A")));
 
-   itc::invoke(itc::InlineCall<int, std::string>(ns_CallStaticDemo::THREAD, 
+   App::invoke(itc::InlineCall<int, std::string>(ns_CallStaticDemo::THREAD,
       [](int i, std::string s)
       {
          std::cout << itc::currentThreadName() << ": L: i=" << i << ", s=" << s << std::endl; 
@@ -68,7 +68,7 @@ int main()
    //////////////////////////////////////////////////////////////////////////////////////////
 
    // wait current thread with blocking.
-   itc::waitEventLoop(ns_CallStaticDemo::THREAD);
+   App::waitEventLoop(ns_CallStaticDemo::THREAD);
 
    itc::logInfo() << "return to main_tid << " << std::this_thread::get_id();
 

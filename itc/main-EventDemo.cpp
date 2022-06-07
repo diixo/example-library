@@ -1,5 +1,6 @@
 
 #include "itc.hpp"
+#include "App.hpp"
 
 const std::string thread_name1("thread1");
 
@@ -49,10 +50,10 @@ void startEventDemo()
    auto consumer = std::make_shared<EventConsumer>();
 
    // append new events from thread_name1, which is current-thread for each event.
-   itc::invoke(EVENT_func1::Event(consumer));
-   itc::invoke(EVENT_func2::Event(consumer, 5));
-   itc::invoke(EVENT_func3::Event(consumer, "HELLO", 42, 5.5f));
-   itc::invoke(EVENT_func4::Event(consumer, std::make_shared<A>(33, "Hello A")));
+   App::invoke(EVENT_func1::Event(consumer));
+   App::invoke(EVENT_func2::Event(consumer, 5));
+   App::invoke(EVENT_func3::Event(consumer, "HELLO", 42, 5.5f));
+   App::invoke(EVENT_func4::Event(consumer, std::make_shared<A>(33, "Hello A")));
 }
 
 DECLARE_STATIC_CALL(STATIC_CALL_ED_start, thread_name1, startEventDemo)
@@ -61,12 +62,12 @@ int main()
 {
    itc::logInfo() << "main_tid:" << std::this_thread::get_id();
 
-   itc::createEventLoop(thread_name1);
+   App::createEventLoop(thread_name1);
 
-   itc::invoke(STATIC_CALL_ED_start::CallStatic());
+   App::invoke(STATIC_CALL_ED_start::CallStatic());
 
    // wait current thread with blocking.
-   itc::waitEventLoop(thread_name1);
+   App::waitEventLoop(thread_name1);
 
    itc::logInfo() << "return to main_tid << " << std::this_thread::get_id();
 
