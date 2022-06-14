@@ -24,14 +24,14 @@ class DeviceManager final
    , public std::enable_shared_from_this<DeviceManager>
 {
 public:
-   DeviceManager() //: mCommandsQueue(std::make_shared<CommandsQueue>())
+   DeviceManager() : mCommandsQueue(std::make_shared<CommandsQueue>())
    {};
 
    ~DeviceManager() = default;
 
    void init() override;
 
-   //std::shared_ptr<CommandsQueue> mCommandsQueue;
+   std::shared_ptr<CommandsQueue> mCommandsQueue;
 };
 
 } //namespace itc

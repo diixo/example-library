@@ -214,4 +214,9 @@ void stopEventLoop(const std::string& threadName);
 // Returns name of current thread
 const std::string& currentThreadName();
 
+// Invoke ICallable object on binded thread.
+// * callBinder - binder ICallable object types to thread should be declared using one of macro:
+// DECLARE_STATIC_CALL, DECLARE_CALL, DECLARE_EVENT, DECLARE_REQUEST
+bool invoke(const itc::_private::CallBinder& callBinder);
+
 } // namespace itc
