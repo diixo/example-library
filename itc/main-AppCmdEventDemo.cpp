@@ -3,6 +3,9 @@
 #include "App.hpp"
 #include "Event.hpp"
 
+#include "common/CommandBase.hpp"
+#include "common/CommandsQueue.hpp"
+
 const std::string thread_name1("thread1");
 
 struct EventConsumer

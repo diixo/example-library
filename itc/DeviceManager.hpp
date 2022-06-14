@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 
+#include "common/CommandsQueue.hpp"
+
 namespace itc
 {
 class IDeviceManager
@@ -22,10 +24,14 @@ class DeviceManager final
    , public std::enable_shared_from_this<DeviceManager>
 {
 public:
-   DeviceManager() {};
+   DeviceManager() //: mCommandsQueue(std::make_shared<CommandsQueue>())
+   {};
+
    ~DeviceManager() = default;
 
    void init() override;
+
+   //std::shared_ptr<CommandsQueue> mCommandsQueue;
 };
 
 } //namespace itc

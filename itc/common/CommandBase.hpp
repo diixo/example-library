@@ -22,7 +22,7 @@
 // Class Declaration
 //------------------------------------------------------
 namespace itc {
-typedef std::weak_ptr<::itc::ITimer> Watchdog;
+//typedef std::weak_ptr<::itc::ITimer> Watchdog;
 
 class CommandBase
     : public ICommand
@@ -36,7 +36,7 @@ public:
     void cancel() override;
     void pause() override;
     void resume() override;
-    void subscribe(std::shared_ptr<ICommandListener> pConsumer, const itc::eCommandNotificationType notificationType) override;
+    void subscribe(std::shared_ptr<ICommandListener> pConsumer, itc::eCommandNotificationType notificationType) override;
     uint32_t subscribe(LambdaCommandListener consumer, eCommandNotificationType notificationType) override;
     void unsubscribe(std::shared_ptr<ICommandListener> pConsumer) override;
     void unsubscribe(uint32_t lambdaId) override;
@@ -44,38 +44,46 @@ public:
 
     uint32_t getCmdUID() const override;
 
-    std::string buildPrefix() const override
-    {
-        return std::string("[") + getName() + "_" + std::to_string(mCmdUID) + "]";
-        // return std::string("[") + "_" + std::to_string(mCmdUID) + "]";
-    }
+    //std::string buildPrefix() const override
+    //{
+    //    return std::string("[") + getName() + "_" + std::to_string(mCmdUID) + "]";
+    //    // return std::string("[") + "_" + std::to_string(mCmdUID) + "]";
+    //}
 
 protected:
     virtual ~CommandBase();
     void finish(eCommandResult result) override;
     void processAbort() override
     {
-        logMethod("CommandBase::processAbort");
+        //logMethod("CommandBase::processAbort");
         finish(itc::eCommandResult::RESULT_ABORTED);
     }
 
     void processCancel() override
     {
-        logMethod("CommandBase::processCancel");
+        //logMethod("CommandBase::processCancel");
         finish(itc::eCommandResult::RESULT_CANCELED);
     }
 
-    void processPause() override { logMethod("CommandBase::processPause"); }
+    void processPause() override {
+       //logMethod("CommandBase::processPause");
+    }
 
-    void processReset() override { logMethod("CommandBase::processReset"); }
+    void processReset() override {
+       //logMethod("CommandBase::processReset");
+    }
 
-    void postProcessing() override { logMethod("CommandBase::postProcessing"); }
-    void processFinish() override { logMethod("CommandBase::processFinish"); }
+    void postProcessing() override {
+       //logMethod("CommandBase::postProcessing");
+    }
+    void processFinish() override {
+       //logMethod("CommandBase::processFinish");
+    }
 
     void processWatchdog() override
     {
-        logMethod("CommandBase::processWatchdog");
-        logError() << "Fault detection";
+        //logMethod("CommandBase::processWatchdog");
+        //logError() << "Fault detection";
         finish(itc::eCommandResult::RESULT_WATCHDOG); // TODO: Maybe need call cancel() for processAbort()
     }
 
@@ -84,19 +92,19 @@ protected:
      *
      * @param timeout[in] Milliseconds timeout
      */
-    void wdtEnable(std::chrono::milliseconds timeout);
+    //void wdtEnable(std::chrono::milliseconds timeout);
 
     /**
      * @brief Restart watchdog. Need call for restart timeout.
      *
      */
-    void wdtReset();
+    //void wdtReset();
 
     /**
      * @brief Method for stop Watchdog
      *
      */
-    void wdtDisable();
+    //void wdtDisable();
 
     /**
      * @brief Method for check current state is aborting
@@ -122,14 +130,14 @@ private:
     std::map<itc::eCommandNotificationType, std::vector<std::shared_ptr<ICommandListener>>> mCommandListeners;
     std::map<itc::eCommandNotificationType, std::vector<std::pair<uint32_t, LambdaCommandListener>>> mLambdaCommandListeners;
     itc::eCommandResult mResult;
-    Watchdog mWatchdogTimer;
+    //Watchdog mWatchdogTimer;
 
     static uint32_t msNextCmdUID;
     const uint32_t mCmdUID;
     static uint32_t msLambdaUID;
 };
 
-DECLARE_EVENT(EVENT_Watchdog_onTimer, CommandBase, processWatchdog)
+//DECLARE_EVENT(EVENT_Watchdog_onTimer, CommandBase, processWatchdog)
 
 } // namespace itc
 

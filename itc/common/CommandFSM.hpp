@@ -189,9 +189,9 @@ private:
 	bool dispatch_event( event e )
 	// --------------------------------------------------------------------------
 	{
-		state *next_state;
-		if ( (next_state = (cur_state->*e)(*this)) ) cur_state = next_state;
-		return next_state;
+		state *next_state= (cur_state->*e)(*this);
+		if ( next_state ) cur_state = next_state;
+		return next_state != 0;
 	}
 	// --------------------------------------------------------------------------
 	bool dispatch_uasync( event e )

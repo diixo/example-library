@@ -6,8 +6,10 @@
 //------------------------------------------------------
 #include <initializer_list>
 #include <list>
+#include <map>
+#include <vector>
 #include <memory>
-
+#include <algorithm>
 
 #include "CommandsContainer.hpp"
 
@@ -54,12 +56,12 @@ public:
     void onNotification(std::shared_ptr<ICommand> pCommand, eCommandNotificationType notificationType) override;
 
     // Debugged
-    std::string buildPrefix() const override
-    {
-        std::stringstream stream;
-        stream << "[CQ_" << this << "]";
-        return stream.str();
-    }
+    //std::string buildPrefix() const override
+    //{
+    //    std::stringstream stream;
+    //    stream << "[CQ_" << this << "]";
+    //    return stream.str();
+    //}
 
     void block();
     void unblock();
@@ -69,7 +71,7 @@ private:
     void cancelSelectedType(int32_t type);
     inline void doNotifyListeners(eCommandsQueueNotificationType type)
     {
-        logMethod("CommandsQueue::doNotifyListeners", type);
+        //logMethod("CommandsQueue::doNotifyListeners", type);
 
         // Remove unused ptr
         std::for_each(mCommandsQueueListeners.begin(),
@@ -92,7 +94,7 @@ private:
                           }
                           else
                           {
-                              logError() << "listener is broken";
+                              //logError() << "listener is broken";
                           }
                       });
     }
@@ -102,7 +104,7 @@ private:
     bool mBlocked;
 };
 
-} // namespace bt
+} // namespace itc
 
-std::ostream& operator<<(std::ostream& out, const ::bt::ICommandsQueueListener& value);
-std::ostream& operator<<(std::ostream& out, const ::bt::CommandsQueue& value);
+std::ostream& operator<<(std::ostream& out, const ::itc::ICommandsQueueListener& value);
+std::ostream& operator<<(std::ostream& out, const ::itc::CommandsQueue& value);

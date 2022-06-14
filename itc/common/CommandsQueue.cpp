@@ -3,17 +3,19 @@
 //------------------------------------------------------
 // Includes
 //------------------------------------------------------
-#include <STDDumpers.hpp>
+//#include <STDDumpers.hpp>
 #include <algorithm>
+#include <initializer_list>
 
 #include "CommandsQueue.hpp"
 #include "ICommand.hpp"
+#include "../itc.hpp"
 
 //------------------------------------------------------
 // Class Definition
 //------------------------------------------------------
 
-namespace bt {
+namespace itc {
 
 //------------------------------------------------------
 CommandsQueue::CommandsQueue()
@@ -22,21 +24,21 @@ CommandsQueue::CommandsQueue()
     , mBlocked(false)
 //------------------------------------------------------
 {
-    ::itc::logMethod("CommandsQueue::CommandsQueue");
+    //::itc::logMethod("CommandsQueue::CommandsQueue");
 }
 
 //------------------------------------------------------
 CommandsQueue::~CommandsQueue()
 //------------------------------------------------------
 {
-    ::itc::logMethod("CommandsQueue::~CommandsQueue");
+    //::itc::logMethod("CommandsQueue::~CommandsQueue");
 }
 
 //------------------------------------------------------
 void CommandsQueue::push(std::shared_ptr<ICommand> command)
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::push", command);
+    //logMethod("CommandsQueue::push", command);
 
     command->subscribe(shared_from_this(), eCommandNotificationType::CMD_FINISHED);
     mQueue.push_back(command);
@@ -46,12 +48,14 @@ void CommandsQueue::push(std::shared_ptr<ICommand> command)
 
     if (mBlocked)
     {
-        logError() << "CommandsQueue is blocked";
+        //logError() << "CommandsQueue is blocked";
     }
     else if (!mBlocked && 1u == mQueue.size()) // If added command is first
     {
-        ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandsQueue>>([](std::shared_ptr<CommandsQueue> ptr) { ptr->runNextCommand(); },
-                                                                         shared_from_this()));
+        ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandsQueue>>(
+           [](std::shared_ptr<CommandsQueue> ptr){ ptr->runNextCommand(); },
+           shared_from_this())
+        );
     }
 }
 
@@ -59,7 +63,7 @@ void CommandsQueue::push(std::shared_ptr<ICommand> command)
 bool CommandsQueue::empty() const
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::empty");
+    //logMethod("CommandsQueue::empty");
 
     return mQueue.empty();
 }
@@ -68,7 +72,7 @@ bool CommandsQueue::empty() const
 void CommandsQueue::clear()
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::clear");
+    //logMethod("CommandsQueue::clear");
 
     std::for_each(mQueue.begin(), mQueue.end(), [](std::shared_ptr<ICommand>& command) {
         ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommand>>([](std::shared_ptr<ICommand> cmd) { cmd->cancel(); }, command));
@@ -82,7 +86,7 @@ void CommandsQueue::clear()
 size_t CommandsQueue::cancel(std::initializer_list<int32_t> types)
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::cancel", log_size_t(types.size()));
+    //logMethod("CommandsQueue::cancel", log_size_t(types.size()));
 
     size_t count = 0;
     for (auto& type : types)
@@ -104,7 +108,7 @@ size_t CommandsQueue::cancel(std::initializer_list<int32_t> types)
 size_t CommandsQueue::cancel(std::function<bool(const std::shared_ptr<ICommand>)> functor)
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::cancel", functor);
+    //logMethod("CommandsQueue::cancel", functor);
 
     size_t count = 0;
     if (functor != nullptr)
@@ -126,7 +130,7 @@ size_t CommandsQueue::cancel(std::function<bool(const std::shared_ptr<ICommand>)
 void CommandsQueue::pause()
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::pause");
+    //logMethod("CommandsQueue::pause");
 
     std::for_each(mQueue.begin(), mQueue.end(), [](std::shared_ptr<ICommand>& command) {
         ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommand>>([](std::shared_ptr<ICommand> cmd) { cmd->pause(); }, command));
@@ -137,7 +141,7 @@ void CommandsQueue::pause()
 void CommandsQueue::resume()
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::resume");
+    //logMethod("CommandsQueue::resume");
 
     std::for_each(mQueue.begin(), mQueue.end(), [](std::shared_ptr<ICommand>& command) {
         ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommand>>([](std::shared_ptr<ICommand> cmd) { cmd->resume(); }, command));
@@ -148,7 +152,7 @@ void CommandsQueue::resume()
 uint32_t CommandsQueue::count(const int32_t commandTypeId) const
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::count", "commandTypeId:", commandTypeId);
+    //logMethod("CommandsQueue::count", "commandTypeId:", commandTypeId);
     uint32_t counter = 0;
     for (const auto& command : mQueue)
     {
@@ -157,7 +161,7 @@ uint32_t CommandsQueue::count(const int32_t commandTypeId) const
             ++counter;
         }
     }
-    logVerbose() << "commandTypeId " << commandTypeId << " was found " << counter << " times at the CommandsQueue";
+    //logVerbose() << "commandTypeId " << commandTypeId << " was found " << counter << " times at the CommandsQueue";
     return counter;
 }
 
@@ -165,7 +169,7 @@ uint32_t CommandsQueue::count(const int32_t commandTypeId) const
 void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, eCommandsQueueNotificationType notificationType)
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::subsribe", consumer.get(), notificationType);
+    //logMethod("CommandsQueue::subsribe", consumer.get(), notificationType);
 
     auto findResult = std::find_if(mCommandsQueueListeners[notificationType].begin(),
                                    mCommandsQueueListeners[notificationType].end(),
@@ -177,7 +181,7 @@ void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, 
     }
     else
     {
-        logError() << "consumer already subscribed";
+        //logError() << "consumer already subscribed";
     }
 }
 
@@ -185,7 +189,7 @@ void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, 
 void CommandsQueue::unsubscribe(std::shared_ptr<ICommandsQueueListener> consumer)
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::unsubsribe", consumer.get());
+    //logMethod("CommandsQueue::unsubsribe", consumer.get());
 
     /*
      * Delete consumer from vector
@@ -207,7 +211,7 @@ void CommandsQueue::unsubscribe(std::shared_ptr<ICommandsQueueListener> consumer
 void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, eCommandNotificationType notificationType)
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::onNotification", command, notificationType);
+    //logMethod("CommandsQueue::onNotification", command, notificationType);
 
     if (eCommandNotificationType::CMD_FINISHED == notificationType)
     {
@@ -215,7 +219,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, eCommandNo
         {
             if (mQueue.front() != command)
             {
-                logDebug() << "Finished command is not active";
+                //logDebug() << "Finished command is not active";
                 mQueue.erase(std::remove(mQueue.begin(), mQueue.end(), command), mQueue.end()); // remove command if exist in the queue
             }
             else
@@ -223,7 +227,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, eCommandNo
                 mQueue.pop_front();
                 if (0u < mQueue.size())
                 {
-                    logDebug() << "mQueue size:" << mQueue.size();
+                    //logDebug() << "mQueue size:" << mQueue.size();
                     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandsQueue>>(
                         [](std::shared_ptr<CommandsQueue> ptr) { ptr->runNextCommand(); }, shared_from_this()));
                 }
@@ -235,7 +239,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, eCommandNo
         }
         else
         {
-            logError() << "mQueue is empty";
+            //logError() << "mQueue is empty";
         }
     }
 }
@@ -244,7 +248,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, eCommandNo
 void CommandsQueue::block()
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::block");
+    //logMethod("CommandsQueue::block");
     mBlocked = true;
 }
 
@@ -252,7 +256,7 @@ void CommandsQueue::block()
 void CommandsQueue::unblock()
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::unblock");
+    //logMethod("CommandsQueue::unblock");
     mBlocked = false;
     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandsQueue>>([](std::shared_ptr<CommandsQueue> ptr) { ptr->runNextCommand(); },
                                                                      shared_from_this()));
@@ -262,11 +266,11 @@ void CommandsQueue::unblock()
 void CommandsQueue::runNextCommand()
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::runNextCommand");
+    //logMethod("CommandsQueue::runNextCommand");
 
     if (mBlocked)
     {
-        logWarn() << "CommandsQueue is blocked";
+        //logWarn() << "CommandsQueue is blocked";
     }
     else if (0u < mQueue.size())
     {
@@ -274,7 +278,7 @@ void CommandsQueue::runNextCommand()
     }
     else
     {
-        logWarn() << "Queue is empty";
+        //logWarn() << "Queue is empty";
     }
 }
 
@@ -282,7 +286,7 @@ void CommandsQueue::runNextCommand()
 void CommandsQueue::cancelSelectedType(int32_t type)
 //------------------------------------------------------
 {
-    logMethod("CommandsQueue::cancelSelectedType", type);
+    //logMethod("CommandsQueue::cancelSelectedType", type);
 
     std::for_each(mQueue.begin(), mQueue.end(), [type](std::shared_ptr<ICommand>& command) {
         if (type == command->getTypeId())
@@ -294,12 +298,12 @@ void CommandsQueue::cancelSelectedType(int32_t type)
 
 } // namespace bt
 
-std::ostream& operator<<(std::ostream& out, const ::bt::ICommandsQueueListener& value)
+std::ostream& operator<<(std::ostream& out, const ::itc::ICommandsQueueListener& value)
 {
     return out << "ICQListener";
 }
 
-std::ostream& operator<<(std::ostream& out, const ::bt::CommandsQueue& value)
+std::ostream& operator<<(std::ostream& out, const ::itc::CommandsQueue& value)
 {
-    return out << value.buildPrefix();
+   return out;// << value.buildPrefix();
 }

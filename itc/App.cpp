@@ -4,7 +4,7 @@
 #include "DeviceManager.hpp"
 #include "itc.hpp"
 #include "Event.hpp"
-
+// ConnectMusicCommand
 void App::processQueue()
 {
    while (true)

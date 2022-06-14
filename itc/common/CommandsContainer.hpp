@@ -4,13 +4,13 @@
 #include <memory>
 
 #include "ICommand.hpp"
-#include "logger/Debugged.hpp"
+//#include "logger/Debugged.hpp"
 
 namespace itc {
 
 class CommandsContainer
     : public ICommandListener
-    , public Debugged
+    //, public Debugged
 {
 public:
     explicit CommandsContainer() = default;

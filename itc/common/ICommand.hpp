@@ -5,6 +5,7 @@
 // Includes
 //------------------------------------------------------
 #include <memory>
+#include <functional>
 #include <stdint.h>
 
 #include "CommandTypes.hpp"
