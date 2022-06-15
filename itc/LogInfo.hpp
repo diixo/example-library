@@ -99,3 +99,17 @@ std::unique_ptr<TraceStream> operator<<(itc::eTraceMessageLevel level, const Log
    std::unique_ptr<TraceStream> b(new TraceStream(std::string("")/*TraceManager::getInstance().getCurrentThreadName()*/, pref.getPrefix(), level));
    return std::move(b);
 }
+
+namespace itc
+{
+
+void logMethod(const std::string& methodName);
+void logMethod(const LogPrefix& pref, const std::string& methodName);
+
+template <typename Arg, typename... Args>
+void logMethod(const std::string& methodName, Arg&& arg, Args&&... args);
+
+template <typename Arg, typename... Args>
+void logMethod(const LogPrefix& pref, const std::string& methodName, Arg&& arg, Args&&... args);
+
+} // namespace itc

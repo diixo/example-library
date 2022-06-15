@@ -10,6 +10,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <sstream>
 
 #include "CommandsContainer.hpp"
 
@@ -56,12 +57,12 @@ public:
     void onNotification(std::shared_ptr<ICommand> pCommand, eCommandNotificationType notificationType) override;
 
     // Debugged
-    //std::string buildPrefix() const override
-    //{
-    //    std::stringstream stream;
-    //    stream << "[CQ_" << this << "]";
-    //    return stream.str();
-    //}
+    std::string buildPrefix() const //override
+    {
+        std::stringstream stream;
+        stream << "[CQ_" << this << "]";
+        return stream.str();
+    }
 
     void block();
     void unblock();

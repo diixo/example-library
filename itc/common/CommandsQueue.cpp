@@ -10,6 +10,7 @@
 #include "CommandsQueue.hpp"
 #include "ICommand.hpp"
 #include "../itc.hpp"
+#include "../LogInfo.hpp"
 
 //------------------------------------------------------
 // Class Definition
@@ -24,14 +25,14 @@ CommandsQueue::CommandsQueue()
     , mBlocked(false)
 //------------------------------------------------------
 {
-    //::itc::logMethod("CommandsQueue::CommandsQueue");
+    ::itc::logMethod("CommandsQueue::CommandsQueue");
 }
 
 //------------------------------------------------------
 CommandsQueue::~CommandsQueue()
 //------------------------------------------------------
 {
-    //::itc::logMethod("CommandsQueue::~CommandsQueue");
+    ::itc::logMethod("CommandsQueue::~CommandsQueue");
 }
 
 //------------------------------------------------------
@@ -305,5 +306,5 @@ std::ostream& operator<<(std::ostream& out, const ::itc::ICommandsQueueListener&
 
 std::ostream& operator<<(std::ostream& out, const ::itc::CommandsQueue& value)
 {
-   return out;// << value.buildPrefix();
+   return out << value.buildPrefix();
 }

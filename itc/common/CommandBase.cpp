@@ -8,6 +8,7 @@
 #include "CommandBase.hpp"
 //#include "logger/TraceManager.hpp"
 #include "../itc.hpp"
+#include "../LogInfo.hpp"
 
 //------------------------------------------------------
 // Class Definition
@@ -41,7 +42,7 @@ CommandBase::~CommandBase()
 void CommandBase::run()
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::run");
+    logMethod("CommandBase::run");
 
     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandBase>>(
         [](std::shared_ptr<CommandBase> ptr) { ptr->mFSM.dispatch(&CCommandFSM::state::trigger_RUN); }, shared_from_this()));
@@ -56,7 +57,7 @@ uint32_t CommandBase::getCmdUID() const
 void CommandBase::cancel()
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::cancel");
+    logMethod("CommandBase::cancel");
 
     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandBase>>(
         [](std::shared_ptr<CommandBase> ptr) { ptr->mFSM.dispatch(&CCommandFSM::state::trigger_CANCEL); }, shared_from_this()));
@@ -66,7 +67,7 @@ void CommandBase::cancel()
 void CommandBase::pause()
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::pause");
+    logMethod("CommandBase::pause");
 
     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandBase>>(
         [](std::shared_ptr<CommandBase> ptr) { ptr->mFSM.dispatch(&CCommandFSM::state::trigger_PAUSE); }, shared_from_this()));
@@ -76,7 +77,7 @@ void CommandBase::pause()
 void CommandBase::resume()
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::resume");
+    logMethod("CommandBase::resume");
 
     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandBase>>(
         [](std::shared_ptr<CommandBase> ptr) { ptr->mFSM.dispatch(&CCommandFSM::state::trigger_RESUME); }, shared_from_this()));
@@ -86,7 +87,7 @@ void CommandBase::resume()
 void CommandBase::finish(eCommandResult result)
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::finish", result);
+    logMethod("CommandBase::finish", result);
 
     mResult = result;
     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandBase>>(
@@ -97,7 +98,7 @@ void CommandBase::finish(eCommandResult result)
 void CommandBase::subscribe(std::shared_ptr<ICommandListener> consumer, eCommandNotificationType notificationType)
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::subsribe", consumer.get(), notificationType);
+    logMethod("CommandBase::subsribe", consumer.get(), notificationType);
 
     auto findResult = std::find_if(mCommandListeners[notificationType].begin(),
                                    mCommandListeners[notificationType].end(),
@@ -117,7 +118,7 @@ void CommandBase::subscribe(std::shared_ptr<ICommandListener> consumer, eCommand
 uint32_t CommandBase::subscribe(LambdaCommandListener consumer, eCommandNotificationType notificationType)
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::subscribe", consumer, notificationType);
+    logMethod("CommandBase::subscribe", consumer, notificationType);
 
     mLambdaCommandListeners[notificationType].push_back({msLambdaUID, consumer});
     return msLambdaUID++;
@@ -127,7 +128,7 @@ uint32_t CommandBase::subscribe(LambdaCommandListener consumer, eCommandNotifica
 void CommandBase::unsubscribe(std::shared_ptr<ICommandListener> consumer)
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::unsubscribe", consumer.get());
+    logMethod("CommandBase::unsubscribe", consumer.get());
 
     /*
      * Delete consumer from vector
@@ -148,7 +149,7 @@ void CommandBase::unsubscribe(std::shared_ptr<ICommandListener> consumer)
 void CommandBase::unsubscribe(uint32_t lambdaId)
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::unsubscribe", lambdaId);
+    logMethod("CommandBase::unsubscribe", lambdaId);
 
     if (0u != lambdaId)
     {
@@ -297,7 +298,7 @@ void CommandBase::onReset(CCommandFSM::data_model& m)
 void CommandBase::doNotifyListeners(eCommandNotificationType type)
 //------------------------------------------------------
 {
-    //logMethod("CommandBase::doNotifyListeners", type);
+    logMethod("CommandBase::doNotifyListeners", type);
     
     std::for_each(
         mCommandListeners[type].begin(), mCommandListeners[type].end(), [this, type](std::shared_ptr<ICommandListener>& listener) {

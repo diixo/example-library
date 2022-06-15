@@ -106,10 +106,18 @@ bool TraceManager::trace(const std::string& threadId, itc::eTraceMessageLevel le
 
 void App::trace(const std::string& threadId, itc::eTraceMessageLevel level, const std::string& prefix, const std::string& message)
 {
+   if (level == itc::eTraceMessageLevel::logInfo)
    {
-      std::shared_lock<std::shared_mutex> gl(mGlobalLoggingMutex);
+      std::shared_lock<std::shared_mutex> gl(mGlobalLogInfoMutex);
       std::ostringstream outstream;
       outstream << /*threadId << "::" << */ prefix << message << std::endl;
+      std::cout << outstream.str();
+   }
+   if (level == itc::eTraceMessageLevel::logVerbose)
+   {
+      std::shared_lock<std::shared_mutex> gl(mGlobalLogVerboseMutex);
+      std::ostringstream outstream;
+      outstream << /*threadId <<*/ "::" << prefix << message << std::endl;
       std::cout << outstream.str();
    }
 }

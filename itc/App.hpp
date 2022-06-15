@@ -25,7 +25,8 @@ private:
 
    MessageQueue m_MsgQueue;
    std::mutex m_Lock;
-   std::shared_mutex mGlobalLoggingMutex;
+   std::shared_mutex mGlobalLogInfoMutex;
+   std::shared_mutex mGlobalLogVerboseMutex;
    App() {};
    ~App();
 
