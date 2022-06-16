@@ -49,7 +49,7 @@ void CommandsQueue::push(std::shared_ptr<ICommand> command)
 
     if (mBlocked)
     {
-        //logError() << "CommandsQueue is blocked";
+        logError() << "CommandsQueue is blocked";
     }
     else if (!mBlocked && 1u == mQueue.size()) // If added command is first
     {
@@ -64,7 +64,7 @@ void CommandsQueue::push(std::shared_ptr<ICommand> command)
 bool CommandsQueue::empty() const
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::empty");
+    logMethod("CommandsQueue::empty");
 
     return mQueue.empty();
 }
@@ -73,7 +73,7 @@ bool CommandsQueue::empty() const
 void CommandsQueue::clear()
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::clear");
+    logMethod("CommandsQueue::clear");
 
     std::for_each(mQueue.begin(), mQueue.end(), [](std::shared_ptr<ICommand>& command) {
         ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommand>>([](std::shared_ptr<ICommand> cmd) { cmd->cancel(); }, command));
@@ -131,7 +131,7 @@ size_t CommandsQueue::cancel(std::function<bool(const std::shared_ptr<ICommand>)
 void CommandsQueue::pause()
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::pause");
+    logMethod("CommandsQueue::pause");
 
     std::for_each(mQueue.begin(), mQueue.end(), [](std::shared_ptr<ICommand>& command) {
         ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommand>>([](std::shared_ptr<ICommand> cmd) { cmd->pause(); }, command));
@@ -142,7 +142,7 @@ void CommandsQueue::pause()
 void CommandsQueue::resume()
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::resume");
+    logMethod("CommandsQueue::resume");
 
     std::for_each(mQueue.begin(), mQueue.end(), [](std::shared_ptr<ICommand>& command) {
         ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommand>>([](std::shared_ptr<ICommand> cmd) { cmd->resume(); }, command));
@@ -162,7 +162,7 @@ uint32_t CommandsQueue::count(const int32_t commandTypeId) const
             ++counter;
         }
     }
-    //logVerbose() << "commandTypeId " << commandTypeId << " was found " << counter << " times at the CommandsQueue";
+    logVerbose() << "commandTypeId " << commandTypeId << " was found " << counter << " times at the CommandsQueue";
     return counter;
 }
 
@@ -182,7 +182,7 @@ void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, 
     }
     else
     {
-        //logError() << "consumer already subscribed";
+        logError() << "consumer already subscribed";
     }
 }
 
@@ -240,7 +240,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, bt::eComma
         }
         else
         {
-            //logError() << "mQueue is empty";
+            logError() << "mQueue is empty";
         }
     }
 }
@@ -249,7 +249,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, bt::eComma
 void CommandsQueue::block()
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::block");
+    logMethod("CommandsQueue::block");
     mBlocked = true;
 }
 
@@ -257,7 +257,7 @@ void CommandsQueue::block()
 void CommandsQueue::unblock()
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::unblock");
+    logMethod("CommandsQueue::unblock");
     mBlocked = false;
     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandsQueue>>([](std::shared_ptr<CommandsQueue> ptr) { ptr->runNextCommand(); },
                                                                      shared_from_this()));
@@ -267,11 +267,11 @@ void CommandsQueue::unblock()
 void CommandsQueue::runNextCommand()
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::runNextCommand");
+    logMethod("CommandsQueue::runNextCommand");
 
     if (mBlocked)
     {
-        //logWarn() << "CommandsQueue is blocked";
+        logWarn() << "CommandsQueue is blocked";
     }
     else if (0u < mQueue.size())
     {
@@ -279,7 +279,7 @@ void CommandsQueue::runNextCommand()
     }
     else
     {
-        //logWarn() << "Queue is empty";
+        logWarn() << "Queue is empty";
     }
 }
 
