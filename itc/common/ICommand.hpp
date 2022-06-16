@@ -193,5 +193,5 @@ std::shared_ptr<T> command_cast(std::shared_ptr<ICommand> command)
 
 } /* namespace itc */
 
-//std::ostream& operator<<(std::ostream& out, const itc::ICommand& value);
-//std::ostream& operator<<(std::ostream& out, const itc::ICommandListener& value);
+std::ostream& operator<<(std::ostream& out, const itc::ICommand& value);
+std::ostream& operator<<(std::ostream& out, const itc::ICommandListener& value);
