@@ -27,7 +27,7 @@ class ICommandsQueueListener
 {
 public:
     virtual ~ICommandsQueueListener() = default;
-    virtual void onNotification(std::shared_ptr<CommandsQueue> pCommandsQueue, eCommandsQueueNotificationType notificationType) = 0;
+    virtual void onNotification(std::shared_ptr<CommandsQueue> pCommandsQueue, bt::eCommandsQueueNotificationType notificationType) = 0;
 };
 
 class CommandsQueue
@@ -50,14 +50,14 @@ public:
     void pause() override;
     void resume() override;
     uint32_t count(const int32_t commandTypeId) const override;
-    void subscribe(std::shared_ptr<ICommandsQueueListener> consumer, eCommandsQueueNotificationType notificationType);
+    void subscribe(std::shared_ptr<ICommandsQueueListener> consumer, bt::eCommandsQueueNotificationType notificationType);
     void unsubscribe(std::shared_ptr<ICommandsQueueListener> consumer);
 
     // ICommandListener
-    void onNotification(std::shared_ptr<ICommand> pCommand, eCommandNotificationType notificationType) override;
+    void onNotification(std::shared_ptr<ICommand> pCommand, bt::eCommandNotificationType notificationType) override;
 
     // Debugged
-    std::string buildPrefix() const //override
+    std::string buildPrefix() const override
     {
         std::stringstream stream;
         stream << "[CQ_" << this << "]";
@@ -70,14 +70,14 @@ public:
 private:
     void runNextCommand();
     void cancelSelectedType(int32_t type);
-    inline void doNotifyListeners(eCommandsQueueNotificationType type)
+    inline void doNotifyListeners(bt::eCommandsQueueNotificationType type)
     {
         //logMethod("CommandsQueue::doNotifyListeners", type);
 
         // Remove unused ptr
         std::for_each(mCommandsQueueListeners.begin(),
                       mCommandsQueueListeners.end(),
-                      [](std::pair<const eCommandsQueueNotificationType, std::vector<std::weak_ptr<ICommandsQueueListener>>>& listeners) {
+                      [](std::pair<const bt::eCommandsQueueNotificationType, std::vector<std::weak_ptr<ICommandsQueueListener>>>& listeners) {
                           listeners.second.erase(
                               std::remove_if(listeners.second.begin(),
                                              listeners.second.end(),
@@ -101,7 +101,7 @@ private:
     }
 
     std::list<std::shared_ptr<ICommand>> mQueue;
-    std::map<eCommandsQueueNotificationType, std::vector<std::weak_ptr<ICommandsQueueListener>>> mCommandsQueueListeners;
+    std::map<bt::eCommandsQueueNotificationType, std::vector<std::weak_ptr<ICommandsQueueListener>>> mCommandsQueueListeners;
     bool mBlocked;
 };
 

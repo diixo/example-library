@@ -23,7 +23,7 @@ CommandBase::CommandBase()
     : mFSM(this)
     , mCommandListeners()
     , mLambdaCommandListeners()
-    , mResult(eCommandResult::RESULT_ERROR)
+    , mResult(bt::eCommandResult::RESULT_ERROR)
     //, mWatchdogTimer()
     , mCmdUID(msNextCmdUID++)
 //------------------------------------------------------
@@ -84,7 +84,7 @@ void CommandBase::resume()
 }
 
 //------------------------------------------------------
-void CommandBase::finish(eCommandResult result)
+void CommandBase::finish(bt::eCommandResult result)
 //------------------------------------------------------
 {
     logMethod("CommandBase::finish", result);
@@ -95,7 +95,7 @@ void CommandBase::finish(eCommandResult result)
 }
 
 //------------------------------------------------------
-void CommandBase::subscribe(std::shared_ptr<ICommandListener> consumer, eCommandNotificationType notificationType)
+void CommandBase::subscribe(std::shared_ptr<ICommandListener> consumer, bt::eCommandNotificationType notificationType)
 //------------------------------------------------------
 {
     logMethod("CommandBase::subsribe", consumer.get(), notificationType);
@@ -115,7 +115,7 @@ void CommandBase::subscribe(std::shared_ptr<ICommandListener> consumer, eCommand
 }
 
 //------------------------------------------------------
-uint32_t CommandBase::subscribe(LambdaCommandListener consumer, eCommandNotificationType notificationType)
+uint32_t CommandBase::subscribe(LambdaCommandListener consumer, bt::eCommandNotificationType notificationType)
 //------------------------------------------------------
 {
     logMethod("CommandBase::subscribe", consumer, notificationType);
@@ -135,7 +135,7 @@ void CommandBase::unsubscribe(std::shared_ptr<ICommandListener> consumer)
      */
     std::for_each(mCommandListeners.begin(),
                   mCommandListeners.end(),
-                  [&consumer](std::pair<const eCommandNotificationType, std::vector<std::shared_ptr<ICommandListener>>>& listeners) {
+                  [&consumer](std::pair<const bt::eCommandNotificationType, std::vector<std::shared_ptr<ICommandListener>>>& listeners) {
                       listeners.second.erase(
                           std::remove_if(listeners.second.begin(),
                                          listeners.second.end(),
@@ -159,7 +159,7 @@ void CommandBase::unsubscribe(uint32_t lambdaId)
         std::for_each(
             mLambdaCommandListeners.begin(),
             mLambdaCommandListeners.end(),
-            [lambdaId](std::pair<const itc::eCommandNotificationType, std::vector<std::pair<uint32_t, LambdaCommandListener>>>& listeners) {
+            [lambdaId](std::pair<const bt::eCommandNotificationType, std::vector<std::pair<uint32_t, LambdaCommandListener>>>& listeners) {
                 listeners.second.erase(std::remove_if(listeners.second.begin(),
                                                       listeners.second.end(),
                                                       [lambdaId](const std::pair<uint32_t, LambdaCommandListener>& listener) {
@@ -176,7 +176,7 @@ void CommandBase::unsubscribe(uint32_t lambdaId)
 }
 
 //------------------------------------------------------
-eCommandResult CommandBase::getCommandResult() const
+bt::eCommandResult CommandBase::getCommandResult() const
 //------------------------------------------------------
 {
     return mResult;
@@ -236,7 +236,7 @@ void CommandBase::stateRunningEnter(CCommandFSM::data_model& m)
 //------------------------------------------------------
 {
     (void)m;
-    doNotifyListeners(eCommandNotificationType::CMD_STARTED);
+    doNotifyListeners(bt::eCommandNotificationType::CMD_STARTED);
     processCommand();
 }
 
@@ -245,14 +245,14 @@ void CommandBase::stateFinishedEnter(CCommandFSM::data_model& m)
 //------------------------------------------------------
 {
     processFinish();
-    doNotifyListeners(eCommandNotificationType::CMD_FINISHED);
+    doNotifyListeners(bt::eCommandNotificationType::CMD_FINISHED);
 }
 
 //------------------------------------------------------
 void CommandBase::stateAbortingEnter(CCommandFSM::data_model& m)
 //------------------------------------------------------
 {
-    doNotifyListeners(eCommandNotificationType::CMD_ABORT_STARTED);
+    doNotifyListeners(bt::eCommandNotificationType::CMD_ABORT_STARTED);
     processAbort();
 }
 
@@ -260,7 +260,7 @@ void CommandBase::stateAbortingEnter(CCommandFSM::data_model& m)
 void CommandBase::stateCancelingEnter(CCommandFSM::data_model& m)
 //------------------------------------------------------
 {
-    doNotifyListeners(eCommandNotificationType::CMD_CANCEL_STARTED);
+    doNotifyListeners(bt::eCommandNotificationType::CMD_CANCEL_STARTED);
     processCancel();
 }
 
@@ -268,14 +268,14 @@ void CommandBase::stateCancelingEnter(CCommandFSM::data_model& m)
 void CommandBase::statePausedEnter(CCommandFSM::data_model& m)
 //------------------------------------------------------
 {
-    doNotifyListeners(eCommandNotificationType::CMD_PAUSED);
+    doNotifyListeners(bt::eCommandNotificationType::CMD_PAUSED);
     processPause();
 }
 
 void CommandBase::statePausedExit(CCommandFSM::data_model& m)
 //------------------------------------------------------
 {
-    doNotifyListeners(eCommandNotificationType::CMD_RESUMED);
+    doNotifyListeners(bt::eCommandNotificationType::CMD_RESUMED);
 }
 
 //------------------------------------------------------
@@ -295,15 +295,15 @@ void CommandBase::onReset(CCommandFSM::data_model& m)
 }
 
 //------------------------------------------------------
-void CommandBase::doNotifyListeners(eCommandNotificationType type)
+void CommandBase::doNotifyListeners(bt::eCommandNotificationType type)
 //------------------------------------------------------
 {
     logMethod("CommandBase::doNotifyListeners", type);
     
     std::for_each(
         mCommandListeners[type].begin(), mCommandListeners[type].end(), [this, type](std::shared_ptr<ICommandListener>& listener) {
-            ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommandListener>, std::shared_ptr<CommandBase>, eCommandNotificationType>(
-                [](std::shared_ptr<ICommandListener> listener, std::shared_ptr<CommandBase> command, eCommandNotificationType type) {
+            ::itc::invoke(::itc::InlineEvent<std::shared_ptr<ICommandListener>, std::shared_ptr<CommandBase>, bt::eCommandNotificationType>(
+                [](std::shared_ptr<ICommandListener> listener, std::shared_ptr<CommandBase> command, bt::eCommandNotificationType type) {
                     listener->onNotification(command, type);
                 },
                 listener,
@@ -314,10 +314,10 @@ void CommandBase::doNotifyListeners(eCommandNotificationType type)
     for (auto listener : mLambdaCommandListeners[type])
     {
         ::itc::invoke(
-            ::itc::InlineEvent<std::pair<uint32_t, LambdaCommandListener>, std::shared_ptr<CommandBase>, eCommandNotificationType>(
+            ::itc::InlineEvent<std::pair<uint32_t, LambdaCommandListener>, std::shared_ptr<CommandBase>, bt::eCommandNotificationType>(
                 [](std::pair<uint32_t, LambdaCommandListener> listener,
                    std::shared_ptr<CommandBase> command,
-                   eCommandNotificationType type) {
+                   bt::eCommandNotificationType type) {
                     listener.second(command, type);
                 },
                 listener,

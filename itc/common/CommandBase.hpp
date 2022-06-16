@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "ICommand.hpp"
-//#include "logger/Debugged.hpp"
+#include "../Debugged.hpp"
 
 #include "CommandFSM.hpp"
 //#pragma GCC diagnostic pop
@@ -27,7 +27,7 @@ namespace itc {
 class CommandBase
     : public ICommand
     , public CCommandActionHandlerDefault
-    //, public Debugged
+    , public Debugged
     , public std::enable_shared_from_this<CommandBase>
 {
 public:
@@ -36,33 +36,34 @@ public:
     void cancel() override;
     void pause() override;
     void resume() override;
-    void subscribe(std::shared_ptr<ICommandListener> pConsumer, itc::eCommandNotificationType notificationType) override;
-    uint32_t subscribe(LambdaCommandListener consumer, eCommandNotificationType notificationType) override;
+    void subscribe(std::shared_ptr<ICommandListener> pConsumer, bt::eCommandNotificationType notificationType) override;
+    uint32_t subscribe(LambdaCommandListener consumer, bt::eCommandNotificationType notificationType) override;
     void unsubscribe(std::shared_ptr<ICommandListener> pConsumer) override;
     void unsubscribe(uint32_t lambdaId) override;
-    itc::eCommandResult getCommandResult() const override;
+    bt::eCommandResult getCommandResult() const override;
 
     uint32_t getCmdUID() const override;
 
-    //std::string buildPrefix() const override
-    //{
-    //    return std::string("[") + getName() + "_" + std::to_string(mCmdUID) + "]";
-    //    // return std::string("[") + "_" + std::to_string(mCmdUID) + "]";
-    //}
+    //Debugged
+    std::string buildPrefix() const override
+    {
+        return std::string("[") + getName() + "_" + std::to_string(mCmdUID) + "]";
+        // return std::string("[") + "_" + std::to_string(mCmdUID) + "]";
+    }
 
 protected:
     virtual ~CommandBase();
-    void finish(eCommandResult result) override;
+    void finish(bt::eCommandResult result) override;
     void processAbort() override
     {
         //logMethod("CommandBase::processAbort");
-        finish(itc::eCommandResult::RESULT_ABORTED);
+        finish(bt::eCommandResult::RESULT_ABORTED);
     }
 
     void processCancel() override
     {
         //logMethod("CommandBase::processCancel");
-        finish(itc::eCommandResult::RESULT_CANCELED);
+        finish(bt::eCommandResult::RESULT_CANCELED);
     }
 
     void processPause() override {
@@ -84,7 +85,7 @@ protected:
     {
         //logMethod("CommandBase::processWatchdog");
         //logError() << "Fault detection";
-        finish(itc::eCommandResult::RESULT_WATCHDOG); // TODO: Maybe need call cancel() for processAbort()
+        finish(bt::eCommandResult::RESULT_WATCHDOG); // TODO: Maybe need call cancel() for processAbort()
     }
 
     /**
@@ -124,12 +125,12 @@ private:
     void statePausedExit(CCommandFSM::data_model& m) override;
     void statePostProcessingEnter(CCommandFSM::data_model& m) override;
     void onReset(CCommandFSM::data_model& m) override;
-    void doNotifyListeners(eCommandNotificationType type);
+    void doNotifyListeners(bt::eCommandNotificationType type);
 
     CCommandFSM mFSM;
-    std::map<itc::eCommandNotificationType, std::vector<std::shared_ptr<ICommandListener>>> mCommandListeners;
-    std::map<itc::eCommandNotificationType, std::vector<std::pair<uint32_t, LambdaCommandListener>>> mLambdaCommandListeners;
-    itc::eCommandResult mResult;
+    std::map<bt::eCommandNotificationType, std::vector<std::shared_ptr<ICommandListener>>> mCommandListeners;
+    std::map<bt::eCommandNotificationType, std::vector<std::pair<uint32_t, LambdaCommandListener>>> mLambdaCommandListeners;
+    bt::eCommandResult mResult;
     //Watchdog mWatchdogTimer;
 
     static uint32_t msNextCmdUID;

@@ -41,11 +41,11 @@ void CommandsQueue::push(std::shared_ptr<ICommand> command)
 {
     //logMethod("CommandsQueue::push", command);
 
-    command->subscribe(shared_from_this(), eCommandNotificationType::CMD_FINISHED);
+    command->subscribe(shared_from_this(), bt::eCommandNotificationType::CMD_FINISHED);
     mQueue.push_back(command);
 
     // Notify listeners about CommandsQueue is changed
-    doNotifyListeners(eCommandsQueueNotificationType::CQ_CHANGED);
+    doNotifyListeners(bt::eCommandsQueueNotificationType::CQ_CHANGED);
 
     if (mBlocked)
     {
@@ -80,7 +80,7 @@ void CommandsQueue::clear()
     });
 
     // Notify listeners about CommandsQueue is finish
-    doNotifyListeners(eCommandsQueueNotificationType::CQ_CLEARED);
+    doNotifyListeners(bt::eCommandsQueueNotificationType::CQ_CLEARED);
 }
 
 //------------------------------------------------------
@@ -167,7 +167,7 @@ uint32_t CommandsQueue::count(const int32_t commandTypeId) const
 }
 
 //------------------------------------------------------
-void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, eCommandsQueueNotificationType notificationType)
+void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, bt::eCommandsQueueNotificationType notificationType)
 //------------------------------------------------------
 {
     //logMethod("CommandsQueue::subsribe", consumer.get(), notificationType);
@@ -198,7 +198,7 @@ void CommandsQueue::unsubscribe(std::shared_ptr<ICommandsQueueListener> consumer
     std::for_each(
         mCommandsQueueListeners.begin(),
         mCommandsQueueListeners.end(),
-        [consumer](std::pair<const eCommandsQueueNotificationType, std::vector<std::weak_ptr<ICommandsQueueListener>>>& listeners) {
+        [consumer](std::pair<const bt::eCommandsQueueNotificationType, std::vector<std::weak_ptr<ICommandsQueueListener>>>& listeners) {
             listeners.second.erase(
                 std::remove_if(listeners.second.begin(),
                                listeners.second.end(),
@@ -209,12 +209,12 @@ void CommandsQueue::unsubscribe(std::shared_ptr<ICommandsQueueListener> consumer
 }
 
 //------------------------------------------------------
-void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, eCommandNotificationType notificationType)
+void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, bt::eCommandNotificationType notificationType)
 //------------------------------------------------------
 {
     //logMethod("CommandsQueue::onNotification", command, notificationType);
 
-    if (eCommandNotificationType::CMD_FINISHED == notificationType)
+    if (bt::eCommandNotificationType::CMD_FINISHED == notificationType)
     {
         if (0u < mQueue.size())
         {
@@ -234,7 +234,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, eCommandNo
                 }
                 else
                 {
-                    doNotifyListeners(eCommandsQueueNotificationType::CQ_FINISHED);
+                    doNotifyListeners(bt::eCommandsQueueNotificationType::CQ_FINISHED);
                 }
             }
         }

@@ -26,10 +26,10 @@ class ICommandListener
 {
 public:
     virtual ~ICommandListener() = default;
-    virtual void onNotification(std::shared_ptr<ICommand> pCommand, itc::eCommandNotificationType notificationType) = 0;
+    virtual void onNotification(std::shared_ptr<ICommand> pCommand, bt::eCommandNotificationType notificationType) = 0;
 };
 
-using LambdaCommandListener = std::function<void(std::shared_ptr<ICommand>, itc::eCommandNotificationType)>;
+using LambdaCommandListener = std::function<void(std::shared_ptr<ICommand>, bt::eCommandNotificationType)>;
 
 class ICommand
 {
@@ -63,7 +63,7 @@ public:
      *
      * @param result[in] Result finish state
      */
-    virtual void finish(eCommandResult result) = 0;
+    virtual void finish(bt::eCommandResult result) = 0;
 
     /**
      * @brief Subscribe CommandListener to selected activities.
@@ -71,7 +71,7 @@ public:
      * @param pConsumer[in] listener
      * @param notificationType[in] selected activities type
      */
-    virtual void subscribe(std::shared_ptr<ICommandListener> pConsumer, itc::eCommandNotificationType notificationType) = 0;
+    virtual void subscribe(std::shared_ptr<ICommandListener> pConsumer, bt::eCommandNotificationType notificationType) = 0;
 
     /**
      * @brief Subscribe CommandListener to selected activities.
@@ -80,7 +80,7 @@ public:
      * @param notificationType[in] selected activities type
      * @return lambdaId
      */
-    virtual uint32_t subscribe(LambdaCommandListener consumer, eCommandNotificationType notificationType) = 0;
+    virtual uint32_t subscribe(LambdaCommandListener consumer, bt::eCommandNotificationType notificationType) = 0;
 
     /**
      * @brief Unsubscribe CommandListener
@@ -149,7 +149,7 @@ public:
      *
      * @return bt::eCommandResult
      */
-    virtual itc::eCommandResult getCommandResult() const = 0;
+    virtual bt::eCommandResult getCommandResult() const = 0;
 
     /**
      * @brief Get the command name
