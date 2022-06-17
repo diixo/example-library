@@ -39,7 +39,7 @@ CommandsQueue::~CommandsQueue()
 void CommandsQueue::push(std::shared_ptr<ICommand> command)
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::push", command);
+    logMethod("CommandsQueue::push", command);
 
     command->subscribe(shared_from_this(), bt::eCommandNotificationType::CMD_FINISHED);
     mQueue.push_back(command);
@@ -109,7 +109,7 @@ size_t CommandsQueue::cancel(std::initializer_list<int32_t> types)
 size_t CommandsQueue::cancel(std::function<bool(const std::shared_ptr<ICommand>)> functor)
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::cancel", functor);
+    logMethod("CommandsQueue::cancel", functor);
 
     size_t count = 0;
     if (functor != nullptr)
@@ -153,7 +153,7 @@ void CommandsQueue::resume()
 uint32_t CommandsQueue::count(const int32_t commandTypeId) const
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::count", "commandTypeId:", commandTypeId);
+    logMethod("CommandsQueue::count", "commandTypeId:", commandTypeId);
     uint32_t counter = 0;
     for (const auto& command : mQueue)
     {
@@ -170,7 +170,7 @@ uint32_t CommandsQueue::count(const int32_t commandTypeId) const
 void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, bt::eCommandsQueueNotificationType notificationType)
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::subsribe", consumer.get(), notificationType);
+    logMethod("CommandsQueue::subsribe", consumer.get(), notificationType);
 
     auto findResult = std::find_if(mCommandsQueueListeners[notificationType].begin(),
                                    mCommandsQueueListeners[notificationType].end(),
@@ -190,7 +190,7 @@ void CommandsQueue::subscribe(std::shared_ptr<ICommandsQueueListener> consumer, 
 void CommandsQueue::unsubscribe(std::shared_ptr<ICommandsQueueListener> consumer)
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::unsubsribe", consumer.get());
+    logMethod("CommandsQueue::unsubsribe", consumer.get());
 
     /*
      * Delete consumer from vector
@@ -212,7 +212,7 @@ void CommandsQueue::unsubscribe(std::shared_ptr<ICommandsQueueListener> consumer
 void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, bt::eCommandNotificationType notificationType)
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::onNotification", command, notificationType);
+    logMethod("CommandsQueue::onNotification", command, notificationType);
 
     if (bt::eCommandNotificationType::CMD_FINISHED == notificationType)
     {
@@ -220,7 +220,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, bt::eComma
         {
             if (mQueue.front() != command)
             {
-                //logDebug() << "Finished command is not active";
+                logDebug() << "Finished command is not active";
                 mQueue.erase(std::remove(mQueue.begin(), mQueue.end(), command), mQueue.end()); // remove command if exist in the queue
             }
             else
@@ -228,7 +228,7 @@ void CommandsQueue::onNotification(std::shared_ptr<ICommand> command, bt::eComma
                 mQueue.pop_front();
                 if (0u < mQueue.size())
                 {
-                    //logDebug() << "mQueue size:" << mQueue.size();
+                    logDebug() << "mQueue size:" << mQueue.size();
                     ::itc::invoke(::itc::InlineEvent<std::shared_ptr<CommandsQueue>>(
                         [](std::shared_ptr<CommandsQueue> ptr) { ptr->runNextCommand(); }, shared_from_this()));
                 }
@@ -287,7 +287,7 @@ void CommandsQueue::runNextCommand()
 void CommandsQueue::cancelSelectedType(int32_t type)
 //------------------------------------------------------
 {
-    //logMethod("CommandsQueue::cancelSelectedType", type);
+    logMethod("CommandsQueue::cancelSelectedType", type);
 
     std::for_each(mQueue.begin(), mQueue.end(), [type](std::shared_ptr<ICommand>& command) {
         if (type == command->getTypeId())
