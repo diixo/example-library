@@ -8,6 +8,7 @@
 #include <string>
 #include <stdint.h>
 #include <vector>
+#include <sstream>
 
 namespace CommonAPI
 {
@@ -135,3 +136,8 @@ enum class eCommandsQueueNotificationType : uint32_t
 };
 
 }  //namespace itc
+
+std::ostream& operator<<(std::ostream& out, const ::bt::eCommandNotificationType& value);
+std::ostream& operator<<(std::ostream& out, const ::bt::eCommandResult& value);
+std::ostream& operator<<(std::ostream& out, const ::bt::eCommandsQueueNotificationType& value);
+

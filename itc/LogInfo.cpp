@@ -68,34 +68,3 @@ void itc::logMethod(const LogPrefix& pref, const std::string& methodName)
    *buff.get() << methodName << "()";
 }
 
-template <typename Arg, typename... Args>
-void itc::logMethod(const std::string& methodName, Arg&& arg, Args&&... args)
-{
-   // TODO: fix it.
-   const std::string thread_id = std::to_string(0);// std::this_thread::get_id();   //App::GetInstance().getCurrentThreadName()
-
-   std::unique_ptr<TraceStream> ts(
-      new TraceStream(thread_id, "", itc::eTraceMessageLevel::logVerbose));
-   *ts << methodName << "(" << std::forward<Arg>(arg);
-   using expander = int[];
-   (void)expander {
-      0, (void(*ts << ", " << std::forward<Args>(args)), 0)...
-   };
-   *ts << ")";
-}
-
-template <typename Arg, typename... Args>
-void itc::logMethod(const LogPrefix& pref, const std::string& methodName, Arg&& arg, Args&&... args)
-{
-   // TODO: fix it.
-   const std::string thread_id = std::to_string(0);// std::this_thread::get_id();   //App::GetInstance().getCurrentThreadName()
-
-   std::unique_ptr<TraceStream> ts(
-      new TraceStream(thread_id, pref.getPrefix(), itc::eTraceMessageLevel::logVerbose));
-   *ts << methodName << "(" << std::forward<Arg>(arg);
-   using expander = int[];
-   (void)expander {
-      0, (void(*ts << ", " << std::forward<Args>(args)), 0)...
-   };
-   *ts << ")";
-}
