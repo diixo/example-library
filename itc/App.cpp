@@ -9,7 +9,7 @@ void App::processQueue()
 {
    while (true)
    {
-      itc::logInfo() << "App::processQueue >> wait...";
+      itc::logInfo() << "App::processQueue >> wait_for...";
 
       m_MsgQueue.waitForEvents();
 

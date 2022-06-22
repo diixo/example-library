@@ -67,4 +67,13 @@ target_link_libraries (test_itc_AppCmdEventDemo  lib_itc_common_command)
 
 ##################################
 
+add_executable (test_itc_AppCmdEventExitDemo
+   "main-AppCmdEventExitDemo.cpp"
+   ${SOURCE_ITC}
+)
+
+target_link_libraries (test_itc_AppCmdEventExitDemo  lib_itc_common_command)
+
+##################################
+
 add_subdirectory(common)
