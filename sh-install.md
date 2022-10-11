@@ -58,6 +58,6 @@ sudo apt-get install -y icu-devtools
 #log4cplus
 sudo apt install liblog4cplus-dev
 
-# install python-setuptools
+# install python-setuptools (pybind11)
 sudo apt-get install python3 python3-pip python3-setuptools
 ```
