@@ -24,7 +24,7 @@ EventLoop::EventLoop(const std::string& threadName)
    , mSize(0)
 {
    mThread = std::thread(&EventLoop::run, this);
-   mThreadId = mThread.get_id();    
+   mThreadId = mThread.get_id();
 }
 
 EventLoop::~EventLoop()
@@ -119,6 +119,7 @@ void EventLoop::run()
                   itc::logInfo() << getThreadName() << " >> wait_for... sz=" << mEvents.size() << " mStop="<< (int)mbStop;
 
                //mCV.wait_for(lock, timeToNextTimer /* [this]() { return (!mEvents.empty()); } */);
+               // (while(!predicate) wait;)
                mCV.wait(lock, [this]() { return (!mEvents.empty() || mbStop); });
 
                if (LOG_ENABLE)
