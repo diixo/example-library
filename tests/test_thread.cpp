@@ -14,7 +14,7 @@ void count1m(int id)
    {
       logInfo() << "count1m>>" << id;
 
-      // binded thread waits for other threads to advance without blocking.
+      // calling-thread switch for other threads to advance without blocking.
       std::this_thread::yield();
    }
 

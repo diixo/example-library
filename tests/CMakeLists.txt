@@ -22,5 +22,9 @@ add_executable (test_thread_cv_wait_yield "test_cv_wait_yield.cpp" "LogInfo.cpp"
 add_executable (test_thread_cv_wait       "test_cv_wait.cpp"       "LogInfo.cpp")
 add_executable (test_thread_dispatch      "test_thread_dispatch.cpp" "LogInfo.cpp")
 
+add_executable (test_thread_join_1 "test_thread_join_1.cpp" "LogInfo.cpp")
+add_executable (test_thread_join_2 "test_thread_join_2.cpp" "LogInfo.cpp")
+add_executable (test_thread_join_3 "test_thread_join_3.cpp" "LogInfo.cpp")
+
 #enable_testing()
 #add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")

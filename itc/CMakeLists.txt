@@ -18,6 +18,8 @@ add_executable (test_itc_EventDemo
    ${SOURCE_ITC}
 )
 
+add_library (lib_itc STATIC ${SOURCE_ITC})
+
 target_link_libraries (test_itc_EventDemo  lib_itc_common_command)
 
 ##################################
