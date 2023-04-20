@@ -20,14 +20,8 @@ void thrx()
 void pause_thread(int n)
 {
    logInfo() << "p ->>" << n;
-   std::this_thread::sleep_for(std::chrono::seconds(n));
+   std::this_thread::sleep_for(std::chrono::milliseconds(n));
    logInfo() << "p <<-" << n;
-}
-
-void stop_thread()
-{
-   logInfo() << "stop ->>";
-   run = false;
 }
 
 int main()
@@ -35,21 +29,20 @@ int main()
    std::thread t(thrx);
    t.detach();
 
-   logInfo() << "Spawning 3 threads...";
-   std::thread t1(pause_thread, 1);
-   std::thread t2(pause_thread, 1);
-   std::thread t3(pause_thread, 1);
+   logInfo() << "Spawning 3 threads...\n";
+   std::thread t1(pause_thread, 10);
 
-   std::cout << "Done spawning threads. Now waiting for them to join:\n";
+   logInfo() << "Done spawning threads. Now waiting for them to join:\n";
 
-   t1.join();
    // Blocks the current thread, until the function-thread finishes its execution, and returns with the completion of all the operations in the thread
-   t2.join();
-   t3.join();
+   t1.join();
 
-   std::thread st(stop_thread);
-   st.join();
-   std::cout << "All threads joined!\n";
+   run = false;
+
+   // call sleep to re-switch into another thread, with enough time, while its finished.
+   std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+   logInfo() << "All threads joined!\n";
 
    return 0;
 }

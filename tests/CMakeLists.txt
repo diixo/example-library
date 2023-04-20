@@ -25,6 +25,7 @@ add_executable (test_thread_dispatch      "test_thread_dispatch.cpp" "LogInfo.cp
 add_executable (test_thread_join_1 "test_thread_join_1.cpp" "LogInfo.cpp")
 add_executable (test_thread_join_2 "test_thread_join_2.cpp" "LogInfo.cpp")
 add_executable (test_thread_join_3 "test_thread_join_3.cpp" "LogInfo.cpp")
+add_executable (test_thread_join_4 "test_thread_join_4.cpp" "LogInfo.cpp")
 
 #enable_testing()
 #add_gtest_test(${TEST_TARGET} "${TEST_SOURCE_FILES}" "")

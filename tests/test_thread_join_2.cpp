@@ -32,7 +32,7 @@ int main()
    // Sleep (or yield) switched between started thread and main thread, and never continue to reset run-variable.
    run = false;
 
-   std::cout << "Spawning 3 threads...\n";
+   logInfo() << "Spawning 3 threads...\n";
    std::thread t1(pause_thread, 1);
    std::thread t2(pause_thread, 2);
    std::thread t3(pause_thread, 3);
