@@ -29,10 +29,10 @@ int main()
    std::thread t(thrx);
    t.detach();
 
-   logInfo() << "Spawning 3 threads...\n";
+   logInfo() << "Spawning 3 threads...";
    std::thread t1(pause_thread, 10);
 
-   logInfo() << "Done spawning threads. Now waiting for them to join:\n";
+   logInfo() << "Done spawning threads. Now waiting for them to join:";
 
    // Blocks the current thread, until the function-thread finishes its execution, and returns with the completion of all the operations in the thread
    t1.join();
